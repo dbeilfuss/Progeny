@@ -11,8 +11,8 @@ let optionList: [ListItem] = [
     ListItem(name: "Herd", icon: "CowIcon"),
     ListItem(name: "Supplies", icon: "bag.fill"),
     ListItem(name: "Users", icon: "person.fill"),
-    ListItem(name: "Add Breeding Event", icon: "plus"),
-    ListItem(name: "Add Creature", icon: "cat.fill"),
+    ListItem(name: "Breeding Event", icon: "plus"),
+    ListItem(name: "Creature", icon: "cat.fill"),
     ListItem(name: "Settings", icon: "gear")
 ]
 
@@ -33,9 +33,9 @@ struct TestScrollView: View {
     var body: some View {
         // Parameters
         let itemList: [ListItem] = optionList
-        let buttonType: ButtonType = .primary
-        let layout: ButtonLayout = .textRightAlligned
-        let buttonHeight: ButtonHeight = .short
+        let buttonType: ButtonType = .secondary
+        let layout: ButtonLayout = .textLeftAlligned
+        let buttonHeight: ButtonHeight = .tall
         
         // ScrollView
         ScrollView {

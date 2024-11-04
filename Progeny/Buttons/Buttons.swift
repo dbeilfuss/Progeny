@@ -96,18 +96,18 @@ enum ButtonType {
         case .hyperlink:
             let buttonStyleSheet: ButtonAppearance = .init(
                 maxWidthRatio: globalButtonStyle.maxWidthRatioLarge,
-                heightLarge: globalButtonStyle.heightLarge,
-                heightSmall: globalButtonStyle.heightMedium,
+                heightLarge: globalButtonStyle.heightMedium,
+                heightSmall: globalButtonStyle.heightSmall,
                 cornerRadiusLarge: globalButtonStyle.cornerRadiusLarge,
                 cornerRadiusSmall: globalButtonStyle.cornerRadiusSmall,
-                shadowRadius: globalButtonStyle.shadowRadiusSmall,
+                shadowRadius: 0,
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
                 backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
-                fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
-                fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
-                borderWidth: 0.0
+                fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerMedium,
+                fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerSmall,
+                borderWidth: 0
             )
             return buttonStyleSheet
         case .animalListDetailed:
@@ -296,13 +296,13 @@ struct CustomButton: View {
     // Body
     var body: some View {
         Button(action: action) {
-            textOverlay(title: title, icon: icon, layout: layout, height: heightNum, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+            buttonTextOverlay(title: title, icon: icon, layout: layout, height: heightNum, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer, buttonType: buttonType)
             .padding()
             .frame(maxWidth: UIScreen.main.bounds.width * maxWidthRatio)
             .frame(height: heightNum)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(Color.black, lineWidth: 1)
+                    .stroke(Color.black, lineWidth: buttonAppearance.borderWidth)
                     .background(backgroundColor)
                     .cornerRadius(cornerRadius)
                     .shadow(radius: buttonAppearance.shadowRadius)
@@ -311,57 +311,7 @@ struct CustomButton: View {
     }
 }
 
-struct textOverlay: View {
-    var title: String
-    var icon: String?
-    var layout: ButtonLayout
-    let height: CGFloat
-    
-    var foregroundColor: Color
-    var fontSizeMultiplyer: CGFloat
 
-    var body: some View {
-        let iconMultiplyer = 0.5
-        HStack {
-            switch layout {
-            case .textLeftAlligned:
-                Text(title)
-                    .scaleEffect(fontSizeMultiplyer)
-                Spacer()
-                if icon != nil {
-                    fetchIcon(icon!)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: height * iconMultiplyer)
-                }
-            case .textRightAlligned:
-                if icon != nil {
-                    fetchIcon(icon!)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: height * iconMultiplyer)
-                }
-                Spacer()
-                Text(title)
-                    .scaleEffect(fontSizeMultiplyer)
-            case .centerText:
-                Text(title)
-                    .scaleEffect(fontSizeMultiplyer)
-            }
-        }
-        .foregroundStyle(foregroundColor)
-    }
-}
-
-//MARK: - Helper Functions
-func fetchIcon(_ iconName: String) -> Image {
-    if UIImage(named: iconName) != nil {  // Custom image from assets
-        Image(uiImage: UIImage(named: iconName)!)
-            .resizable()
-            .renderingMode(.template)
-    } else {  // SF Symbol
-        Image(systemName: iconName)
-            .resizable()
-    }
-}
 
 //MARK: - Preview
 var int = 1
@@ -371,5 +321,5 @@ func testAction() {
 }
 
 #Preview {
-    CustomButton(title: "Herd",icon: "CowIcon", buttonType: .secondary, layout: .textLeftAlligned, height: .short, isSelected: false, action: testAction)
+    CustomButton(title: "Add Location",icon: "plus", buttonType: .hyperlink, layout: .centerText, height: .short, isSelected: false, action: testAction)
 }
