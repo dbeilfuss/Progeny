@@ -33,15 +33,15 @@ struct TestScrollView: View {
     var body: some View {
         // Parameters
         let itemList: [ListItem] = optionList
-        let buttonType: ButtonType = .secondary
+        let buttonType: ButtonType = .cell
         let layout: ButtonLayout = .textLeftAlligned
         let buttonHeight: ButtonHeight = .tall
         
         // ScrollView
         ScrollView {
-            VStack {
+            VStack(spacing: 0) {
                 ForEach(itemList, id: \.self) { item in
-                    CustomButton(title: item.name, icon: item.icon, buttonType: buttonType, layout: layout, height: buttonHeight, action: testAction)
+                    CustomButton(title: item.name, data: "19", icon: item.icon, buttonType: buttonType, layout: layout, height: buttonHeight, action: testAction)
                 }
             }
         }
