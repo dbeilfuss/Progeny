@@ -50,6 +50,7 @@ enum ButtonType {
     case animalListDetailed
     case locationList
     case circle
+    case micro
     case inAppPurchase
     case cell
     case tabSelector
@@ -71,18 +72,18 @@ enum ButtonType {
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
             )
             return buttonStyleSheet
         case .secondary:
             let buttonStyleSheet: ButtonAppearance = .init(
                 maxWidthRatio: globalButtonStyle.maxWidthRatioSmall,
                 heightLarge: globalButtonStyle.heightMedium,
-                heightSmall: globalButtonStyle.heightSmall,
+                heightSmall: globalButtonStyle.heightMini,
                 cornerRadiusLarge: globalButtonStyle.cornerRadiusLarge,
                 cornerRadiusSmall: globalButtonStyle.cornerRadiusLarge,
                 shadowRadius: globalButtonStyle.shadowRadiusSmall,
@@ -93,7 +94,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerMedium,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerSmall,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
             )
             return buttonStyleSheet
         case .hyperlink:
@@ -107,11 +108,11 @@ enum ButtonType {
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerMedium,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerSmall,
                 borderWidth: 0,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingSmall
             )
             return buttonStyleSheet
         case .animalListDetailed:
@@ -125,11 +126,11 @@ enum ButtonType {
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
             )
             return buttonStyleSheet
         case .locationList:
@@ -143,29 +144,47 @@ enum ButtonType {
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
             )
             return buttonStyleSheet
         case .circle:
             let buttonStyleSheet: ButtonAppearance = .init(
-                maxWidthRatio: globalButtonStyle.maxWidthRatioLarge,
+                maxWidthRatio: 999,
                 heightLarge: globalButtonStyle.heightLarge,
                 heightSmall: globalButtonStyle.heightMedium,
-                cornerRadiusLarge: globalButtonStyle.cornerRadiusLarge,
-                cornerRadiusSmall: globalButtonStyle.cornerRadiusSmall,
-                shadowRadius: globalButtonStyle.shadowRadiusSmall,
+                cornerRadiusLarge: 999,
+                cornerRadiusSmall: 999,
+                shadowRadius: globalButtonStyle.shadowRadiusMedium,
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
-                fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
-                fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
+                backgroundColorSelected: globalColorStyle.highlightColor,
+                fontSizeMultiplyerLarge: 18,
+                fontSizeMultiplyerSmall: 11,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
+            )
+            return buttonStyleSheet
+        case .micro:
+            let buttonStyleSheet: ButtonAppearance = .init(
+                maxWidthRatio: 999,
+                heightLarge: globalButtonStyle.heightSmall,
+                heightSmall: globalButtonStyle.heightMini,
+                cornerRadiusLarge: 999,
+                cornerRadiusSmall: 999,
+                shadowRadius: globalButtonStyle.shadowRadiusMedium,
+                foregroundColor: globalColorStyle.fontColor,
+                backgroundColor: globalColorStyle.buttonBackgroundColor,
+                foregroundColorSelected: globalColorStyle.fontColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
+                fontSizeMultiplyerLarge: 7,
+                fontSizeMultiplyerSmall: 6,
+                borderWidth: globalButtonStyle.borderWidthSmall,
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
             )
             return buttonStyleSheet
         case .inAppPurchase:
@@ -174,16 +193,16 @@ enum ButtonType {
                 heightLarge: globalButtonStyle.heightLarge,
                 heightSmall: globalButtonStyle.heightMedium,
                 cornerRadiusLarge: globalButtonStyle.cornerRadiusLarge,
-                cornerRadiusSmall: globalButtonStyle.cornerRadiusSmall,
+                cornerRadiusSmall: globalButtonStyle.cornerRadiusLarge,
                 shadowRadius: globalButtonStyle.shadowRadiusSmall,
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
             )
             return buttonStyleSheet
         case .cell:
@@ -197,11 +216,11 @@ enum ButtonType {
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerMedium,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: 0
+                verticalPadding: -1
             )
             return buttonStyleSheet
         case .tabSelector:
@@ -215,11 +234,11 @@ enum ButtonType {
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
             )
             return buttonStyleSheet
         case .filter:
@@ -233,11 +252,11 @@ enum ButtonType {
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
-                backgroundColorSelected: globalColorStyle.buttonBackgroundColor,
+                backgroundColorSelected: globalColorStyle.highlightColor,
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPadding
+                verticalPadding: globalButtonStyle.verticalPaddingMedium
             )
             return buttonStyleSheet
         }
@@ -248,12 +267,14 @@ enum ButtonType {
 struct CustomButton: View {
     // Parameters
     let title: String
-    let data: String?
-    let icon: String?
+    var data: String?
+    var icon: String?
     let buttonType: ButtonType
     var layout: ButtonLayout = .textLeftAlligned
-    var height: ButtonHeight
+    let height: ButtonHeight
     var isSelected: Bool = false
+    var foregroundColor: Color?
+    var backgroundColor: Color?
     let action: () -> Void
     
     // Computed Properties
@@ -287,37 +308,87 @@ struct CustomButton: View {
         }
     }
     
-    private var foregroundColor: Color {
-        switch isSelected {
-        case true:
-            return buttonAppearance.foregroundColorSelected
-        case false:
-            return buttonAppearance.foregroundColor
+    private var computedForegroundColor: Color {
+        if let foregroundColor = foregroundColor {
+            return foregroundColor
+        } else {
+            switch isSelected {
+            case true:
+                return buttonAppearance.foregroundColorSelected
+            case false:
+                return buttonAppearance.foregroundColor
+            }
         }
     }
     
-    private var backgroundColor: Color {
-        switch isSelected {
-        case true:
-            return buttonAppearance.backgroundColorSelected
-        case false:
-            return buttonAppearance.backgroundColor
+    private var computedBackgroundColor: Color {
+        if let backgroundColor = backgroundColor {
+            return backgroundColor
+        } else {
+            switch isSelected {
+            case true:
+                return buttonAppearance.backgroundColorSelected
+            case false:
+                return buttonAppearance.backgroundColor
+            }
         }
     }
-
+    
     // Body
+    var body: some View {
+        switch buttonType {
+        case .circle:
+            CircleButton(title: title, data: data, icon: icon, buttonType: buttonType, height: height, backgroundColor: backgroundColor, action: action, heightNum: heightNum, foregroundColor: computedForegroundColor, fontSizeMultiplyer: fontSizeMultiplyer, buttonAppearance: buttonAppearance)
+        case .micro:
+            CircleButton(title: title, data: data, icon: icon, buttonType: buttonType, height: height, backgroundColor: backgroundColor, action: action, heightNum: heightNum, foregroundColor: computedForegroundColor, fontSizeMultiplyer: fontSizeMultiplyer, buttonAppearance: buttonAppearance)
+        default:
+            Button(action: action) {
+                buttonTextOverlay(title: title, data: data, icon: icon, layout: layout, height: heightNum, foregroundColor: computedForegroundColor, fontSizeMultiplyer: fontSizeMultiplyer, buttonType: buttonType)
+                    .padding()
+                    .frame(maxWidth: UIScreen.main.bounds.width * maxWidthRatio)
+                    .frame(height: heightNum)
+                    .background(
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                            .stroke(Color.black, lineWidth: buttonAppearance.borderWidth)
+                            .background(computedBackgroundColor)
+                            .cornerRadius(cornerRadius)
+                            .shadow(radius: buttonAppearance.shadowRadius)
+                    )
+            }
+            .padding(EdgeInsets(top: buttonAppearance.verticalPadding/2, leading: 0, bottom: buttonAppearance.verticalPadding/2, trailing: 0))
+        }
+        
+    }
+}
+
+struct CircleButton: View {
+    // Parameters
+    let title: String
+    let data: String?
+    let icon: String?
+    let buttonType: ButtonType
+    let layout: ButtonLayout = .textLeftAlligned
+    let height: ButtonHeight
+    let isSelected: Bool = false
+    let backgroundColor: Color?
+    let action: () -> Void
+    let heightNum: CGFloat
+    let foregroundColor: Color
+    let fontSizeMultiplyer: CGFloat
+    let buttonAppearance: ButtonAppearance
+    
     var body: some View {
         Button(action: action) {
             buttonTextOverlay(title: title, data: data, icon: icon, layout: layout, height: heightNum, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer, buttonType: buttonType)
-            .padding()
-            .frame(maxWidth: UIScreen.main.bounds.width * maxWidthRatio)
-            .frame(height: heightNum)
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(Color.black, lineWidth: buttonAppearance.borderWidth)
-                    .background(backgroundColor)
-                    .cornerRadius(cornerRadius)
-                    .shadow(radius: buttonAppearance.shadowRadius)
+                .padding(fontSizeMultiplyer)
+                .frame(maxWidth: heightNum)
+                .frame(height: heightNum)
+                .background(
+                    RoundedRectangle(cornerRadius: heightNum / 2)
+                        .stroke(Color.black, lineWidth: buttonAppearance.borderWidth)
+                        .background(backgroundColor)
+                        .cornerRadius(heightNum / 2)
+                        .shadow(radius: buttonAppearance.shadowRadius)
                 )
         }
         .padding(EdgeInsets(top: buttonAppearance.verticalPadding/2, leading: 0, bottom: buttonAppearance.verticalPadding/2, trailing: 0))

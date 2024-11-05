@@ -32,22 +32,18 @@ struct buttonTextOverlay: View {
                 HyperlinkTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
             case .animalListDetailed:
                 PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
-
             case .locationList:
                 PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
-
             case .circle:
-                PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
-
+                CircleOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor)
+            case .micro:
+                CircleOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor)
             case .inAppPurchase:
-                PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
-
+                DataTextOverlay(title: title, data: data, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
             case .cell:
                 CellTextOverlay(title: title, data: data, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
-
             case .tabSelector:
                 PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
-
             case .filter:
                 PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
 
@@ -202,6 +198,91 @@ struct CellTextOverlay: View {
                             Text(data)
                                 .scaleEffect(fontSizeMultiplyer)
                         }
+        }
+    }
+}
+
+struct DataTextOverlay: View {
+    // Parameters
+    var title: String
+    var data: String?
+    var icon: String?
+    var layout: ButtonLayout
+    let height: CGFloat
+    
+    var foregroundColor: Color
+    var fontSizeMultiplyer: CGFloat
+    
+    // Stored Properties
+    private let iconMultiplyer = 0.5
+    
+    // Build
+    var body: some View {
+        switch layout {
+        case .textLeftAlligned:
+            if let icon = icon {
+                fetchIcon(icon)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: height * iconMultiplyer)
+            }
+            Text(title)
+                .scaleEffect(fontSizeMultiplyer)
+            Spacer()
+            if let data = data {
+                Text(data)
+                    .scaleEffect(fontSizeMultiplyer)
+            }
+
+        case .textRightAlligned:
+            if let icon = icon {
+                fetchIcon(icon)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: height * iconMultiplyer)
+            }
+            if let data = data {
+                Text(data)
+                    .scaleEffect(fontSizeMultiplyer)
+                Spacer()
+            }
+            Spacer()
+            Text(title)
+                .scaleEffect(fontSizeMultiplyer)
+        case .centerText:
+            if let icon = icon {
+                fetchIcon(icon)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: height * iconMultiplyer)
+                Spacer()
+            }
+            Text(title)
+                .scaleEffect(fontSizeMultiplyer)
+            Spacer()
+            if let data = data {
+                Text(data)
+                    .scaleEffect(fontSizeMultiplyer)
+            }
+
+        }
+    }
+}
+
+
+struct CircleOverlay: View {
+    // Parameters
+    var title: String?
+    var icon: String?
+    var layout: ButtonLayout
+    let height: CGFloat
+    
+    var foregroundColor: Color
+    
+    // Build
+    var body: some View {
+        VStack() {
+            if let icon = icon {
+                fetchIcon(icon)
+                    .aspectRatio(contentMode: .fit)
+            }
         }
     }
 }

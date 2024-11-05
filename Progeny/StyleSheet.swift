@@ -46,6 +46,7 @@ struct ButtonStyleSheet {
     let heightLarge: CGFloat
     let heightMedium: CGFloat
     let heightSmall: CGFloat
+    let heightMini: CGFloat
     
     let maxWidthRatioLarge: CGFloat
     let maxWidthRatioSmall: CGFloat
@@ -54,7 +55,8 @@ struct ButtonStyleSheet {
     let fontSizeMultiplyerMedium: CGFloat
     let fontSizeMultiplyerSmall: CGFloat
     
-    let verticalPadding: CGFloat
+    let verticalPaddingMedium: CGFloat
+    let verticalPaddingSmall: CGFloat
 }
 
 private let globalColorSheet: ColorStyleSheet = .init(
@@ -84,8 +86,9 @@ private let globalButtonStyleSheet: ButtonStyleSheet = .init(
     shadowRadiusSmall: 2,
     
     heightLarge: 70,
-    heightMedium: 40,
-    heightSmall: 30,
+    heightMedium: 45,
+    heightSmall: 35,
+    heightMini: 30,
     
     maxWidthRatioLarge: 0.8,
     maxWidthRatioSmall: 0.4,
@@ -94,5 +97,6 @@ private let globalButtonStyleSheet: ButtonStyleSheet = .init(
     fontSizeMultiplyerMedium: 0.75,
     fontSizeMultiplyerSmall: 0.7,
     
-    verticalPadding: 10
+    verticalPaddingMedium: 10,
+    verticalPaddingSmall: 5
 )
