@@ -8,280 +8,269 @@
 import SwiftUI
 
 struct buttonTextOverlay: View {
-    // Parameters
-    let title: String
-    let data: String?
-    let icon: String?
-    let layout: ButtonLayout
-    let height: CGFloat
-    
-    let foregroundColor: Color
-    let fontSizeMultiplyer: CGFloat
-    
-    let buttonType: ButtonType
+    let p: ButtonParameters
     
     // Build
     var body: some View {
         HStack {
-            switch buttonType {
-                case .primary:
-                PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+            switch p.buttonType {
+            case .primary:
+                PrimaryTextOverlay(p: p)
             case .secondary:
-                PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+                PrimaryTextOverlay(p: p)
             case .hyperlink:
-                HyperlinkTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+                HyperlinkTextOverlay(p: p)
             case .animalListDetailed:
-                PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+                PrimaryTextOverlay(p: p)
             case .locationList:
-                PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+                PrimaryTextOverlay(p: p)
             case .circle:
-                CircleOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor)
+                CircleOverlay(p: p)
             case .micro:
-                CircleOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor)
+                CircleOverlay(p: p)
             case .inAppPurchase:
-                DataTextOverlay(title: title, data: data, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+                DataTextOverlay(p: p)
             case .cell:
-                CellTextOverlay(title: title, data: data, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+                CellTextOverlay(p: p)
             case .tabSelector:
-                PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
+                PrimaryTextOverlay(p: p)
             case .filter:
-                PrimaryTextOverlay(title: title, icon: icon, layout: layout, height: height, foregroundColor: foregroundColor, fontSizeMultiplyer: fontSizeMultiplyer)
-
+                SquareOverlay(p: p)
+                
             }
         }
-        .foregroundStyle(foregroundColor)
+        .foregroundStyle(p.computedForegroundColor)
     }
 }
 
-//MARK: - Body Creation Options
+//MARK: - Text Overlays
+
 struct PrimaryTextOverlay: View {
-    // Parameters
-    var title: String
-    var icon: String?
-    var layout: ButtonLayout
-    let height: CGFloat
-    
-    var foregroundColor: Color
-    var fontSizeMultiplyer: CGFloat
+    let p: ButtonParameters
     
     // Stored Properties
     private let iconMultiplyer = 0.5
     
     // Build
     var body: some View {
-        switch layout {
+        switch p.layout {
         case .textLeftAlligned:
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
             Spacer()
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
+
             }
         case .textRightAlligned:
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
+
             }
             Spacer()
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
         case .centerText:
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
         }
     }
 }
 
 struct HyperlinkTextOverlay: View {
-    // Parameters
-    var title: String
-    var icon: String?
-    var layout: ButtonLayout
-    let height: CGFloat
-    
-    var foregroundColor: Color
-    var fontSizeMultiplyer: CGFloat
+    let p: ButtonParameters
     
     // Stored Properties
     private let iconMultiplyer = 0.35
     
     // Build
     var body: some View {
-        switch layout {
+        switch p.layout {
         case .textLeftAlligned:
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
             }
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
             Spacer()
         case .textRightAlligned:
             Spacer()
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
             }
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
         case .centerText:
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
             }
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
         }
     }
 }
 
 struct CellTextOverlay: View {
-    // Parameters
-    var title: String
-    var data: String?
-    var icon: String?
-    var layout: ButtonLayout
-    let height: CGFloat
-    
-    var foregroundColor: Color
-    var fontSizeMultiplyer: CGFloat
+    let p: ButtonParameters
     
     // Stored Properties
     private let iconMultiplyer = 0.4
     
     // Build
     var body: some View {
-        switch layout {
+        switch p.layout {
         case .textLeftAlligned:
-            if let icon = icon {
-                            fetchIcon(icon)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: height * iconMultiplyer)
-                        }
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            if let icon = p.icon {
+                fetchIcon(icon)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
+            }
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
             Spacer()
-            if let data = data {
+            if let data = p.data {
                 Text(data)
-                    .scaleEffect(fontSizeMultiplyer)
+                    .scaleEffect(p.fontSizeMultiplyer)
             }
         case .textRightAlligned:
-            if let data = data {
-                            Text(data)
-                                .scaleEffect(fontSizeMultiplyer)
-                        }
+            if let data = p.data {
+                Text(data)
+                    .scaleEffect(p.fontSizeMultiplyer)
+            }
             Spacer()
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
-            if let icon = icon {
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
             }
-
-
+            
+            
         case .centerText:
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
             }
-            Text(title + ":")
-                .scaleEffect(fontSizeMultiplyer)
-            if let data = data {
-                            Text(data)
-                                .scaleEffect(fontSizeMultiplyer)
-                        }
+            Text(p.title + ":")
+                .scaleEffect(p.fontSizeMultiplyer)
+            if let data = p.data {
+                Text(data)
+                    .scaleEffect(p.fontSizeMultiplyer)
+            }
         }
     }
 }
 
 struct DataTextOverlay: View {
-    // Parameters
-    var title: String
-    var data: String?
-    var icon: String?
-    var layout: ButtonLayout
-    let height: CGFloat
-    
-    var foregroundColor: Color
-    var fontSizeMultiplyer: CGFloat
+    let p: ButtonParameters
     
     // Stored Properties
     private let iconMultiplyer = 0.5
     
     // Build
     var body: some View {
-        switch layout {
+        switch p.layout {
         case .textLeftAlligned:
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
             }
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
             Spacer()
-            if let data = data {
+            if let data = p.data {
                 Text(data)
-                    .scaleEffect(fontSizeMultiplyer)
+                    .scaleEffect(p.fontSizeMultiplyer)
             }
-
+            
         case .textRightAlligned:
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
             }
-            if let data = data {
+            if let data = p.data {
                 Text(data)
-                    .scaleEffect(fontSizeMultiplyer)
+                    .scaleEffect(p.fontSizeMultiplyer)
                 Spacer()
             }
             Spacer()
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
         case .centerText:
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: height * iconMultiplyer)
+                    .frame(height: p.heightNum * iconMultiplyer)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
                 Spacer()
             }
-            Text(title)
-                .scaleEffect(fontSizeMultiplyer)
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
             Spacer()
-            if let data = data {
+            if let data = p.data {
                 Text(data)
-                    .scaleEffect(fontSizeMultiplyer)
+                    .scaleEffect(p.fontSizeMultiplyer)
             }
-
+            
         }
     }
 }
 
-
 struct CircleOverlay: View {
-    // Parameters
-    var title: String?
-    var icon: String?
-    var layout: ButtonLayout
-    let height: CGFloat
-    
-    var foregroundColor: Color
+    let p: ButtonParameters
     
     // Build
     var body: some View {
         VStack() {
-            if let icon = icon {
+            if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
+            }
+        }
+    }
+}
+
+struct SquareOverlay: View {
+    let p: ButtonParameters
+    
+    // Computed Properties
+    private var iconMultiplyer: CGFloat { p.icon == "minus" ? 0.5 : 0.7 }
+    
+    // Build
+    var body: some View {
+        VStack(spacing: p.icon == "minus" ? 15 : 2) {
+            if let icon = p.icon {
+                fetchIcon(icon)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: p.heightNum * iconMultiplyer)
+            }
+            if p.height == .tall {
+                Text(p.title)
+                    .scaleEffect(p.fontSizeMultiplyer)
             }
         }
     }

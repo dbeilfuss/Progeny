@@ -12,7 +12,7 @@ let optionList: [ListItem] = [
     ListItem(name: "Supplies", icon: "tag", data: nil),
     ListItem(name: "Users", icon: "pin", data: nil),
     ListItem(name: "Breeding Event", icon: "plus", data: nil),
-    ListItem(name: "Creature", icon: "cat.fill", data: nil),
+    ListItem(name: "Creature", icon: "minus", data: nil),
     ListItem(name: "Settings", icon: "gear", data: nil)
 ]
 
@@ -25,10 +25,17 @@ let cowList: [ListItem] = [
 ]
 
 let supplyList: [ListItem] = [
-    ListItem(name: "Encore", icon: "calendar.circle", data: "$5"),
-    ListItem(name: "Bedrock", icon: "calendar.circle.fill", data: "$10"),
-    ListItem(name: "Comeback Kid", icon: "calendar.circle", data: "$60"),
-    ListItem(name: "Gold Buckle", icon: "calendar.circle.fill", data: "$100")
+    ListItem(name: "Encore", icon: "CowIcon", data: "5"),
+    ListItem(name: "Bedrock", icon: "CowIcon", data: "4"),
+    ListItem(name: "Comeback Kid", icon: "cat.fill", data: "0"),
+    ListItem(name: "Gold Buckle", icon: "dog.fill", data: "12")
+]
+
+let purchaseList: [ListItem] = [
+    ListItem(name: "Weekly", icon: "calendar.circle", data: "$5"),
+    ListItem(name: "Monthly", icon: "calendar.circle.fill", data: "$10"),
+    ListItem(name: "Annually", icon: "calendar.circle", data: "$60"),
+    ListItem(name: "Lifetime", icon: "calendar.circle.fill", data: "$100")
 ]
 
 struct ListItem: Hashable {
@@ -40,9 +47,9 @@ struct ListItem: Hashable {
 struct TestScrollView: View {
     var body: some View {
         // Parameters
-        let itemList: [ListItem] = supplyList
-        let buttonType: ButtonType = .inAppPurchase
-        let layout: ButtonLayout = .textRightAlligned
+        let itemList: [ListItem] = optionList
+        let buttonType: ButtonType = .micro
+        let layout: TextLayout = .centerText
         let buttonHeight: ButtonHeight = .short
         
         // ScrollView
