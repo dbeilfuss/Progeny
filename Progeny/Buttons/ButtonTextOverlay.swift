@@ -20,10 +20,10 @@ struct buttonTextOverlay: View {
                 PrimaryTextOverlay(p: p)
             case .hyperlink:
                 HyperlinkTextOverlay(p: p)
-            case .animalListDetailed:
-                PrimaryTextOverlay(p: p)
-            case .locationList:
-                PrimaryTextOverlay(p: p)
+            case .listTagged(let userTags, let systemTags):
+                ListTaggedTextOverlay(p: p, userTags: userTags, systemTags: systemTags)
+            case .listStandard:
+                ListStandardTextOverlay(p: p)
             case .circle:
                 CircleOverlay(p: p)
             case .micro:
@@ -33,7 +33,7 @@ struct buttonTextOverlay: View {
             case .cell:
                 CellTextOverlay(p: p)
             case .tabSelector:
-                PrimaryTextOverlay(p: p)
+                SquareOverlay(p: p)
             case .filter:
                 SquareOverlay(p: p)
                 
@@ -63,7 +63,7 @@ struct PrimaryTextOverlay: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(height: p.heightNum * iconMultiplyer)
                     .frame(maxWidth: p.heightNum * iconMultiplyer)
-
+                
             }
         case .textRightAlligned:
             if let icon = p.icon {
@@ -71,7 +71,7 @@ struct PrimaryTextOverlay: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(height: p.heightNum * iconMultiplyer)
                     .frame(maxWidth: p.heightNum * iconMultiplyer)
-
+                
             }
             Spacer()
             Text(p.title)
@@ -79,6 +79,97 @@ struct PrimaryTextOverlay: View {
         case .centerText:
             Text(p.title)
                 .scaleEffect(p.fontSizeMultiplyer)
+        }
+    }
+}
+
+struct ListStandardTextOverlay: View {
+    let p: ButtonParameters
+    
+    // Stored Properties
+    private let iconMultiplyer = 0.5
+    
+    // Build
+    var body: some View {
+        switch p.layout {
+        case .textLeftAlligned:
+            
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
+            Spacer()
+            Text(p.data ?? "")
+                .scaleEffect(p.fontSizeMultiplyer * 0.8)
+        case .textRightAlligned:
+            Text(p.data ?? "")
+                .scaleEffect(p.fontSizeMultiplyer * 0.8)
+            Spacer()
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
+        case .centerText:
+            VStack() {
+                Text(p.title)
+                    .scaleEffect(p.fontSizeMultiplyer)
+                if p.data != nil {
+                    if p.height == .tall {
+                        Spacer()
+                    }
+                    Text(p.data ?? "")
+                        .scaleEffect(p.fontSizeMultiplyer * (p.height == .tall ? 0.8 : 0.7))
+                }
+            }
+        }
+    }
+}
+
+struct ListTaggedTextOverlay: View {
+    let p: ButtonParameters
+    let userTags: [Tag]
+    let systemTags: [Tag]
+    
+    // Stored Properties
+    private let iconMultiplyer = 0.5
+    
+    // Build
+    var body: some View {
+        switch p.layout {
+        case .textLeftAlligned:
+            HStack() {
+                VStack(alignment: .leading) {
+                    Text(p.title)
+                        .scaleEffect(p.fontSizeMultiplyer)
+                    Spacer()
+                    Text(p.data ?? "")
+                        .scaleEffect(p.fontSizeMultiplyer)
+                }
+                VStack(spacing: 1) {
+                    ForEach(userTags) { tag in
+                        TagView(tag: tag, height: p.heightNum / 5)
+                    }
+                }
+                VStack() {
+                    ForEach(systemTags) { tag in
+                        TagView(tag: tag, height: p.heightNum / 5)
+                    }
+                }
+            }
+        case .textRightAlligned:
+            Text(p.data ?? "")
+                .scaleEffect(p.fontSizeMultiplyer * 0.8)
+            Spacer()
+            Text(p.title)
+                .scaleEffect(p.fontSizeMultiplyer)
+        case .centerText:
+            VStack() {
+                Text(p.title)
+                    .scaleEffect(p.fontSizeMultiplyer)
+                if p.data != nil {
+                    if p.height == .tall {
+                        Spacer()
+                    }
+                    Text(p.data ?? "")
+                        .scaleEffect(p.fontSizeMultiplyer * (p.height == .tall ? 0.8 : 0.7))
+                }
+            }
         }
     }
 }
@@ -196,15 +287,14 @@ struct DataTextOverlay: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(height: p.heightNum * iconMultiplyer)
                     .frame(maxWidth: p.heightNum * iconMultiplyer)
-            }
-            Text(p.title)
-                .scaleEffect(p.fontSizeMultiplyer)
-            Spacer()
-            if let data = p.data {
-                Text(data)
+                Text(p.title)
                     .scaleEffect(p.fontSizeMultiplyer)
+                Spacer()
+                if let data = p.data {
+                    Text(data)
+                        .scaleEffect(p.fontSizeMultiplyer)
+                }
             }
-            
         case .textRightAlligned:
             if let icon = p.icon {
                 fetchIcon(icon)
@@ -263,6 +353,9 @@ struct SquareOverlay: View {
     // Build
     var body: some View {
         VStack(spacing: p.icon == "minus" ? 15 : 2) {
+            if p.icon == "minus" {
+                Spacer()
+            }
             if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)

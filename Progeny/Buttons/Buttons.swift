@@ -40,7 +40,7 @@ struct ButtonAppearanceVariations {
     var fontSizeMultiplyerSmall: CGFloat
     
     var borderWidth: CGFloat
-    var verticalPadding: CGFloat
+    var edgeInsets: CGFloat
 }
 
 struct ButtonParameters {
@@ -50,6 +50,7 @@ struct ButtonParameters {
     let buttonType: ButtonType
     let layout: TextLayout
     let height: ButtonHeight
+    var specificHeight: CGFloat?
     let isSelected: Bool
     var foregroundColor: Color?
     var backgroundColor: Color?
@@ -59,11 +60,15 @@ struct ButtonParameters {
     var buttonAppearance: ButtonAppearanceVariations { buttonType.appearance }
     var maxWidthRatio: Double { buttonAppearance.maxWidthRatio }
     var heightNum: CGFloat {
-        switch height {
-        case .tall:
-            return buttonAppearance.heightLarge
-        case .short:
-            return buttonAppearance.heightSmall
+        if let specificHeight = specificHeight {
+            return specificHeight
+        } else {
+            switch height {
+            case .tall:
+                return buttonAppearance.heightLarge
+            case .short:
+                return buttonAppearance.heightSmall
+            }
         }
     }
     var cornerRadius: CGFloat {
@@ -108,12 +113,14 @@ struct ButtonParameters {
     }
 }
 
+
+
 enum ButtonType {
     case primary
     case secondary
     case hyperlink
-    case animalListDetailed
-    case locationList
+    case listTagged(userTags: [Tag], systemTags: [Tag])
+    case listStandard
     case circle
     case micro
     case inAppPurchase
@@ -141,7 +148,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                edgeInsets: globalButtonStyle.edgeInsetsSmall
             )
             return buttonStyleSheet
         case .secondary:
@@ -159,7 +166,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerMedium,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerSmall,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
         case .hyperlink:
@@ -177,10 +184,10 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerMedium,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerSmall,
                 borderWidth: 0,
-                verticalPadding: globalButtonStyle.verticalPaddingSmall
+                edgeInsets: globalButtonStyle.edgeInsetsSmall
             )
             return buttonStyleSheet
-        case .animalListDetailed:
+        case .listTagged:
             let buttonStyleSheet: ButtonAppearanceVariations = .init(
                 maxWidthRatio: globalButtonStyle.maxWidthRatioLarge,
                 heightLarge: globalButtonStyle.heightLarge,
@@ -195,10 +202,10 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
-        case .locationList:
+        case .listStandard:
             let buttonStyleSheet: ButtonAppearanceVariations = .init(
                 maxWidthRatio: globalButtonStyle.maxWidthRatioLarge,
                 heightLarge: globalButtonStyle.heightLarge,
@@ -213,7 +220,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
         case .circle:
@@ -231,7 +238,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: 18,
                 fontSizeMultiplyerSmall: 11,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
         case .micro:
@@ -249,7 +256,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: 7,
                 fontSizeMultiplyerSmall: 6,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
         case .inAppPurchase:
@@ -267,7 +274,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
         case .cell:
@@ -285,7 +292,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerMedium,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: -1
+                edgeInsets: -1
             )
             return buttonStyleSheet
         case .tabSelector:
@@ -293,17 +300,17 @@ enum ButtonType {
                 maxWidthRatio: globalButtonStyle.maxWidthRatioLarge,
                 heightLarge: globalButtonStyle.heightLarge,
                 heightSmall: globalButtonStyle.heightMedium,
-                cornerRadiusLarge: globalButtonStyle.cornerRadiusLarge,
-                cornerRadiusSmall: globalButtonStyle.cornerRadiusSmall,
-                shadowRadius: globalButtonStyle.shadowRadiusSmall,
+                cornerRadiusLarge: 0,
+                cornerRadiusSmall: 0,
+                shadowRadius: 0,
                 foregroundColor: globalColorStyle.fontColor,
                 backgroundColor: globalColorStyle.buttonBackgroundColor,
                 foregroundColorSelected: globalColorStyle.fontColor,
                 backgroundColorSelected: globalColorStyle.highlightColor,
-                fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerLarge,
-                fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerLarge,
-                borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerSmall,
+                fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerSmall,
+                borderWidth: 0,
+                edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
         case .filter:
@@ -321,7 +328,7 @@ enum ButtonType {
                 fontSizeMultiplyerLarge: globalButtonStyle.fontSizeMultiplyerSmall,
                 fontSizeMultiplyerSmall: globalButtonStyle.fontSizeMultiplyerSmall,
                 borderWidth: globalButtonStyle.borderWidthSmall,
-                verticalPadding: globalButtonStyle.verticalPaddingMedium
+                edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
         }
@@ -337,12 +344,13 @@ struct CustomButton: View {
     let buttonType: ButtonType
     var layout: TextLayout = .textLeftAlligned
     let height: ButtonHeight
+    var specificHeight: CGFloat?
     var isSelected: Bool = false
     var foregroundColor: Color?
     var backgroundColor: Color?
     let action: () -> Void
     
-    var buttonParameters: ButtonParameters { ButtonParameters(title: title, data: data, icon: icon, buttonType: buttonType, layout: layout, height: height, isSelected: isSelected, action: action) }
+    var buttonParameters: ButtonParameters { ButtonParameters(title: title, data: data, icon: icon, buttonType: buttonType, layout: layout, height: height, specificHeight: specificHeight, isSelected: isSelected, foregroundColor: foregroundColor, backgroundColor: backgroundColor, action: action) }
     
     // Body
     var body: some View {
@@ -351,6 +359,8 @@ struct CustomButton: View {
             CircleButton(p: buttonParameters)
         case .micro:
             CircleButton(p: buttonParameters)
+        case .tabSelector:
+            SquareButton(p: buttonParameters)
         case .filter:
             SquareButton(p: buttonParameters)
         default:
@@ -367,13 +377,13 @@ struct CustomButton: View {
                             .shadow(radius: buttonParameters.buttonAppearance.shadowRadius)
                     )
             }
-            .padding(EdgeInsets(top: buttonParameters.buttonAppearance.verticalPadding/2, leading: 0, bottom: buttonParameters.buttonAppearance.verticalPadding/2, trailing: 0))
+            .padding(EdgeInsets(top: buttonParameters.buttonAppearance.edgeInsets/2, leading: 0, bottom: buttonParameters.buttonAppearance.edgeInsets/2, trailing: 0))
         }
         
     }
 }
 
-struct CircleButton: View {
+private struct CircleButton: View {
     let p: ButtonParameters
     
     var body: some View {
@@ -385,17 +395,17 @@ struct CircleButton: View {
                 .background(
                     RoundedRectangle(cornerRadius: p.heightNum / 2)
                         .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
-                        .background(p.backgroundColor)
+                        .background(p.computedBackgroundColor)
                         .cornerRadius(p.heightNum / 2)
                         .shadow(radius: p.buttonAppearance.shadowRadius)
                 )
         }
-        .padding(EdgeInsets(top: p.buttonAppearance.verticalPadding/2, leading: 0, bottom: p.buttonAppearance.verticalPadding/2, trailing: 0))
+        .padding(EdgeInsets(top: p.buttonAppearance.edgeInsets/2, leading: 0, bottom: p.buttonAppearance.edgeInsets/2, trailing: 0))
     }
 }
 
 
-struct SquareButton: View {
+private struct SquareButton: View {
     let p: ButtonParameters
     
     var body: some View {
@@ -409,12 +419,12 @@ struct SquareButton: View {
                 .background(
                     RoundedRectangle(cornerRadius: p.cornerRadius)
                         .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
-                        .background(p.backgroundColor)
+                        .background(p.computedBackgroundColor)
                         .cornerRadius(p.cornerRadius)
                         .shadow(radius: p.buttonAppearance.shadowRadius)
                 )
         }
-        .padding(EdgeInsets(top: p.buttonAppearance.verticalPadding/2, leading: 0, bottom: p.buttonAppearance.verticalPadding/2, trailing: 0))
+        .padding(EdgeInsets(top: 0, leading: p.buttonAppearance.edgeInsets/2, bottom: 0, trailing: p.buttonAppearance.edgeInsets/2))
     }
 }
 
@@ -426,5 +436,5 @@ func testAction() {
 }
 
 #Preview {
-    CustomButton(title: "White Lightning", data: "19",icon: "plus", buttonType: .cell, layout: .textLeftAlligned, height: .short, isSelected: false, action: testAction)
+    CustomButton(title: "Homestead", data: "29 Head",icon: "cat", buttonType: .listStandard, layout: .textLeftAlligned, height: .tall, isSelected: false, action: testAction)
 }
