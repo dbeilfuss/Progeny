@@ -31,6 +31,6 @@ struct TagView: View {
 }
 
 #Preview {
-    let tag: Tag = .init(name: "Pregnant", color: .red, fontColor: .white)
+    let tag: Tag = .init(name: "Not Pregnant", color: .red, fontColor: .white)
     TagView(tag: tag, height: 25, specificWidth: 200)
 }

@@ -46,34 +46,59 @@ let purchaseList: [ListItem] = [
 ]
 
 struct ListItem: Hashable {
+    let id: UUID = UUID()
     let name: String
     let icon: String?
     let data: String?
 }
 
 struct TestScrollView: View {
+    var itemList: [ListItem]
+    @State var isNavigating = false
+    @State var destination: String = ""
+    
     var body: some View {
-        let userTags: [Tag] = SampleTags().userTags
-        let systemTags: [Tag] = SampleTags().systemTags
-        
-        // Parameters
-        let itemList: [ListItem] = locationList
-        let buttonType: ButtonType = .listTagged(userTags: userTags, systemTags: systemTags)
-        let layout: TextLayout = .textLeftAlligned
-        let buttonHeight: ButtonHeight = .tall
-        
-        // ScrollView
-        ScrollView {
-            VStack(spacing: 0) {
-                ForEach(itemList, id: \.self) { item in
-                    CustomButton(title: item.name, data: item.data, icon: item.icon, buttonType: buttonType, layout: layout, height: buttonHeight, specificHeight: nil, isSelected: false, action: testAction)
+        NavigationStack {
+            // Parameters
+            let _: [Tag] = SampleTags().userTags
+            let _: [Tag] = SampleTags().systemTags
+            
+            // ScrollView
+            ScrollView {
+                VStack(spacing: 0) {
+                    ForEach(itemList, id: \.self) { item in
+                        CustomButton(buttonParameters: ButtonParameters(
+                            id: item.id.uuidString,
+                            title: item.name,
+                            data: item.data,
+                            icon: item.icon,
+                            buttonType: .primary,
+                            layout: .textLeftAlligned,
+                            height: .tall,
+                            isSelected: false,
+                            
+                            action: .navigationLink(
+                                isNavigating: $isNavigating,
+                                destination: $destination,
+                                id: item.id.uuidString,
+                                action: testAction)))
+
+                    }
                 }
             }
+//            .frame(width: .infinity, height: .infinity)
         }
-        .frame(width: .infinity, height: .infinity)
+    }
+}
+
+struct DestinationView: View {
+    let item: ListItem
+    
+    var body: some View {
+        Text("Welcome to \(item.name)!")
     }
 }
 
 #Preview {
-    TestScrollView()
+    TestScrollView(itemList: optionList)
 }

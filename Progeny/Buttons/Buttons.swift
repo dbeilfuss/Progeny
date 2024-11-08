@@ -19,6 +19,15 @@ enum ButtonHeight {
     case short
 }
 
+enum Action {
+    case navigationLink(
+        isNavigating: Binding<Bool>,
+        destination: Binding<String>,
+        id: String,
+        action: (Binding<Bool>, Binding<String>, String) -> Void
+    )
+}
+
 //MARK: - Button Appearance
 struct ButtonAppearanceVariations {
     var maxWidthRatio: Double
@@ -44,6 +53,7 @@ struct ButtonAppearanceVariations {
 }
 
 struct ButtonParameters {
+    let id: String
     let title: String
     var data: String?
     var icon: String?
@@ -54,7 +64,7 @@ struct ButtonParameters {
     let isSelected: Bool
     var foregroundColor: Color?
     var backgroundColor: Color?
-    let action: () -> Void
+    let action: Action
     
     // Computed Properties
     var buttonAppearance: ButtonAppearanceVariations { buttonType.appearance }
@@ -338,23 +348,12 @@ enum ButtonType {
 //MARK: - Custom Button Construction
 struct CustomButton: View {
     // Parameters
-    let title: String
-    var data: String?
-    var icon: String?
-    let buttonType: ButtonType
-    var layout: TextLayout = .textLeftAlligned
-    let height: ButtonHeight
-    var specificHeight: CGFloat?
-    var isSelected: Bool = false
-    var foregroundColor: Color?
-    var backgroundColor: Color?
-    let action: () -> Void
-    
-    var buttonParameters: ButtonParameters { ButtonParameters(title: title, data: data, icon: icon, buttonType: buttonType, layout: layout, height: height, specificHeight: specificHeight, isSelected: isSelected, foregroundColor: foregroundColor, backgroundColor: backgroundColor, action: action) }
+    var buttonParameters: ButtonParameters
+    var p: ButtonParameters { buttonParameters }
     
     // Body
     var body: some View {
-        switch buttonType {
+        switch buttonParameters.buttonType {
         case .circle:
             CircleButton(p: buttonParameters)
         case .micro:
@@ -364,20 +363,24 @@ struct CustomButton: View {
         case .filter:
             SquareButton(p: buttonParameters)
         default:
-            Button(action: action) {
-                buttonTextOverlay(p: buttonParameters)
-                    .padding()
-                    .frame(maxWidth: UIScreen.main.bounds.width * buttonParameters.maxWidthRatio)
-                    .frame(height: buttonParameters.heightNum)
-                    .background(
-                        RoundedRectangle(cornerRadius: buttonParameters.cornerRadius)
-                            .stroke(Color.black, lineWidth: buttonParameters.buttonAppearance.borderWidth)
-                            .background(buttonParameters.computedBackgroundColor)
-                            .cornerRadius(buttonParameters.cornerRadius)
-                            .shadow(radius: buttonParameters.buttonAppearance.shadowRadius)
-                    )
+            switch p.action {
+            case .navigationLink(let isNavigating, let destination, let id, let action):
+                Button(action: {action(isNavigating, destination, id)}) {
+                    buttonTextOverlay(p: buttonParameters)
+                        .padding()
+                        .frame(maxWidth: UIScreen.main.bounds.width * buttonParameters.maxWidthRatio)
+                        .frame(height: buttonParameters.heightNum)
+                        .background(
+                            RoundedRectangle(cornerRadius: buttonParameters.cornerRadius)
+                                .stroke(Color.black, lineWidth: buttonParameters.buttonAppearance.borderWidth)
+                                .background(buttonParameters.computedBackgroundColor)
+                                .cornerRadius(buttonParameters.cornerRadius)
+                                .shadow(radius: buttonParameters.buttonAppearance.shadowRadius)
+                        )
+                }
+                .padding(EdgeInsets(top: p.buttonAppearance.edgeInsets/2, leading: 0, bottom: p.buttonAppearance.edgeInsets/2, trailing: 0))
             }
-            .padding(EdgeInsets(top: buttonParameters.buttonAppearance.edgeInsets/2, leading: 0, bottom: buttonParameters.buttonAppearance.edgeInsets/2, trailing: 0))
+
         }
         
     }
@@ -387,20 +390,23 @@ private struct CircleButton: View {
     let p: ButtonParameters
     
     var body: some View {
-        Button(action: p.action) {
-            buttonTextOverlay(p: p)
-                .padding(p.fontSizeMultiplyer)
-                .frame(maxWidth: p.heightNum)
-                .frame(height: p.heightNum)
-                .background(
-                    RoundedRectangle(cornerRadius: p.heightNum / 2)
-                        .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
-                        .background(p.computedBackgroundColor)
-                        .cornerRadius(p.heightNum / 2)
-                        .shadow(radius: p.buttonAppearance.shadowRadius)
-                )
+        switch p.action {
+        case .navigationLink(let isNavigating, let destination, let id,  let action):
+            Button(action: {action(isNavigating, destination, id)}) {
+                buttonTextOverlay(p: p)
+                    .padding(p.fontSizeMultiplyer)
+                    .frame(maxWidth: p.heightNum)
+                    .frame(height: p.heightNum)
+                    .background(
+                        RoundedRectangle(cornerRadius: p.heightNum / 2)
+                            .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
+                            .background(p.computedBackgroundColor)
+                            .cornerRadius(p.heightNum / 2)
+                            .shadow(radius: p.buttonAppearance.shadowRadius)
+                    )
+            }
+            .padding(EdgeInsets(top: p.buttonAppearance.edgeInsets/2, leading: 0, bottom: p.buttonAppearance.edgeInsets/2, trailing: 0))
         }
-        .padding(EdgeInsets(top: p.buttonAppearance.edgeInsets/2, leading: 0, bottom: p.buttonAppearance.edgeInsets/2, trailing: 0))
     }
 }
 
@@ -409,32 +415,56 @@ private struct SquareButton: View {
     let p: ButtonParameters
     
     var body: some View {
-        Button(action: p.action) {
-            buttonTextOverlay(p: p)
-                .padding(.top, 12)
-                .padding(.horizontal, p.height == .tall ? 0 : 10)
-                .padding(.bottom, p.height == .tall ? 0 : 10)
-                .frame(maxWidth: p.heightNum)
-                .frame(height: p.heightNum)
-                .background(
-                    RoundedRectangle(cornerRadius: p.cornerRadius)
-                        .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
-                        .background(p.computedBackgroundColor)
-                        .cornerRadius(p.cornerRadius)
-                        .shadow(radius: p.buttonAppearance.shadowRadius)
-                )
+        switch p.action {
+        case .navigationLink(let isNavigating, let destination, let id,  let action):
+            Button(action: {action(isNavigating, destination, id)}) {
+                buttonTextOverlay(p: p)
+                    .padding(.top, 12)
+                    .padding(.horizontal, p.height == .tall ? 0 : 10)
+                    .padding(.bottom, p.height == .tall ? 0 : 10)
+                    .frame(maxWidth: p.heightNum)
+                    .frame(height: p.heightNum)
+                    .background(
+                        RoundedRectangle(cornerRadius: p.cornerRadius)
+                            .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
+                            .background(p.computedBackgroundColor)
+                            .cornerRadius(p.cornerRadius)
+                            .shadow(radius: p.buttonAppearance.shadowRadius)
+                    )
+            }
+            .padding(EdgeInsets(top: 0, leading: p.buttonAppearance.edgeInsets/2, bottom: 0, trailing: p.buttonAppearance.edgeInsets/2))
         }
-        .padding(EdgeInsets(top: 0, leading: p.buttonAppearance.edgeInsets/2, bottom: 0, trailing: p.buttonAppearance.edgeInsets/2))
     }
 }
 
 //MARK: - Preview
 var int = 1
-func testAction() {
-    print("buttonPressed \(int)")
+func testAction(isNavigating: Binding<Bool>, destination: Binding<String>, id: String) {
+    print("Before setting: \(isNavigating.wrappedValue)")
+    print("Before setting: \(destination.wrappedValue)")
     int += 1
+    isNavigating.wrappedValue = true
+    destination.wrappedValue = id
+    print("After setting: \(isNavigating.wrappedValue)")
+    print("After setting: \(destination.wrappedValue)")
 }
 
 #Preview {
-    CustomButton(title: "Homestead", data: "29 Head",icon: "cat", buttonType: .listStandard, layout: .textLeftAlligned, height: .tall, isSelected: false, action: testAction)
+    @Previewable @State var isNavigating = false
+    @Previewable @State var destination: String = ""
+    var id: String = UUID().uuidString
+    CustomButton(buttonParameters: .init(id: id,
+                                         title: "Homestead",
+                                         data: "29 Head",
+                                         icon: "cat",
+                                         buttonType: .primary,
+                                         layout: .textLeftAlligned,
+                                         height: .tall,
+                                         isSelected: false,
+                                         action: .navigationLink(
+                                            isNavigating: $isNavigating,
+                                            destination: $destination,
+                                            id: id,
+                                            action: testAction))
+    )
 }
