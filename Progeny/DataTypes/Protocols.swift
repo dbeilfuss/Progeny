@@ -15,19 +15,19 @@ enum FetchableType {
     case animal
     case all
     
-    func lookup(by id: String) -> Fetchable? {
-        var searchList: [Fetchable] = []
-        
-        switch self {
-        case .animal:
-            searchList = AnimalClass().testAnimalList
-        case .all:
-            searchList = AnimalClass().testAnimalList
-        }
-        let filteredList = searchList.filter { $0.id.uuidString == id }
-
-        return filteredList.first
-    }
+//    func lookup(by id: String) -> Fetchable? {
+//        var searchList: [Fetchable] = []
+//        
+//        switch self {
+//        case .animal:
+//            searchList = AnimalClass().testAnimalList
+//        case .all:
+//            searchList = AnimalClass().testAnimalList
+//        }
+//        let filteredList = searchList.filter { $0.id.uuidString == id }
+//
+//        return filteredList.first
+//    }
 }
 
 protocol Taggable {
@@ -62,3 +62,5 @@ struct testAnimal: Fetchable, Taggable, Pinnable {
         }
     }
 }
+
+

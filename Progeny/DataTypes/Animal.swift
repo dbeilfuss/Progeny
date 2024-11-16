@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AnimalClass {
+class AnimalClass: ObservableObject {
     
     @Published var testAnimalList: [Animal] = [
         Animal(visibleID: "0085", sex: .female, status: .active),
@@ -44,49 +44,74 @@ enum BreedingEvent {
     case birthing(calfID: String, date: Date)
 }
 
-
-struct Animal: Pinnable, Taggable, Fetchable, Hashable {
+class Animal: ObservableObject, Identifiable, Hashable {
     
     // Identity
-    var id: UUID = .init()
-    var visibleID: String?
-    var name: String?
-    var breed: String?
-    var sex: Sex
-    var dueDate: Date? //For use on computing likely lineage
-    var birthDate: Date?
-    var purchaseDate: Date?
-    var status: Status
-    var milestones: [Milestone] = []
+    let id: UUID
+    @Published var visibleID: String?
+    @Published var name: String?
+    @Published var breed: String?
+    @Published var sex: Sex
+    @Published var dueDate: Date?
+    @Published var birthDate: Date?
+    @Published var purchaseDate: Date?
+    @Published var status: Status
+    @Published var milestones: [Milestone]
     
     // Lineage
-    var sireID: String?
-    var damID: String?
-    var surrogateDamID: String?
-    var lineageOptions: [LineageOption] = []
+    @Published var sireID: String?
+    @Published var damID: String?
+    @Published var surrogateDamID: String?
+    @Published var lineageOptions: [LineageOption]
     
     // UserData
-    var isPinned: Bool = false // Need to make a computed property
-    var tags: [String] = []
+    @Published var isPinned: Bool
+    @Published var tags: [String]
     
-    func listItem() -> ListItem {
-        let listItem = ListItem(
-            name: name ?? "",
-            icon: "CowIcon",
-            data: visibleID ?? "")
-        
-        return listItem
+    init(
+        id: UUID = UUID(),
+        visibleID: String? = nil,
+        name: String? = nil,
+        breed: String? = nil,
+        sex: Sex,
+        dueDate: Date? = nil,
+        birthDate: Date? = nil,
+        purchaseDate: Date? = nil,
+        status: Status,
+        milestones: [Milestone] = [],
+        sireID: String? = nil,
+        damID: String? = nil,
+        surrogateDamID: String? = nil,
+        lineageOptions: [LineageOption] = [],
+        isPinned: Bool = false,
+        tags: [String] = []
+    ) {
+        self.id = id
+        self.visibleID = visibleID
+        self.name = name
+        self.breed = breed
+        self.sex = sex
+        self.dueDate = dueDate
+        self.birthDate = birthDate
+        self.purchaseDate = purchaseDate
+        self.status = status
+        self.milestones = milestones
+        self.sireID = sireID
+        self.damID = damID
+        self.surrogateDamID = surrogateDamID
+        self.lineageOptions = lineageOptions
+        self.isPinned = isPinned
+        self.tags = tags
     }
     
     // Conformance to Hashable
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id) // Use `id` as the unique identifier for hashing
+        hasher.combine(id)
     }
     
     static func == (lhs: Animal, rhs: Animal) -> Bool {
-        lhs.id == rhs.id // Equality is based on the unique `id`
+        lhs.id == rhs.id
     }
-    
 }
 
 

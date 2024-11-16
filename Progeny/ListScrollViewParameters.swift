@@ -56,6 +56,28 @@ struct ListItem {
     let name: String
     let icon: String?
     let data: String?
+    
+    init(from animal: Animal) {
+        var name: String {
+            if animal.name != nil {
+                animal.name!
+            } else if animal.visibleID != nil {
+                animal.visibleID!
+            } else {
+                ""
+            }
+        }
+        
+        self.name = name
+        self.icon = Constants().animalIcon
+        self.data = animal.visibleID
+    }
+    
+    init(name: String, icon: String?, data: String?) {
+        self.name = name
+        self.icon = icon
+        self.data = data
+    }
 }
 
 
