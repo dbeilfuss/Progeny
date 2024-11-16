@@ -21,11 +21,18 @@ enum ButtonHeight {
 
 enum Action {
     case navigationLink(
-        isNavigating: Binding<Bool>,
+        isNavigating: Binding<Bool>?,
         destination: Binding<String>,
         id: String,
-        action: (Binding<Bool>, Binding<String>, String) -> Void
+        action: (Binding<Bool>?, Binding<String>, String) -> Void
     )
+//    case fetchItem(
+//        type: FetchableType,
+//        id: String,
+//        animal: Binding<Animal>?,
+//
+//        Action: (String, Binding<Animal>) -> Void
+//        )
 }
 
 //MARK: - Button Appearance
@@ -53,7 +60,6 @@ struct ButtonAppearanceVariations {
 }
 
 struct ButtonParameters {
-    let id: String
     let title: String
     var data: String?
     var icon: String?
@@ -64,8 +70,11 @@ struct ButtonParameters {
     let isSelected: Bool
     var foregroundColor: Color?
     var backgroundColor: Color?
-    let action: Action
-    
+
+    // Subscription Requirements
+    var requiresSubscription: Bool
+    var activeSubscription: Bool
+
     // Computed Properties
     var buttonAppearance: ButtonAppearanceVariations { buttonType.appearance }
     var maxWidthRatio: Double { buttonAppearance.maxWidthRatio }
@@ -136,7 +145,7 @@ enum ButtonType {
     case inAppPurchase
     case cell
     case tabSelector
-    case filter
+    case square
     
     var appearance: ButtonAppearanceVariations {
         let globalButtonStyle = globalStyleSheet.buttonStyle
@@ -323,7 +332,7 @@ enum ButtonType {
                 edgeInsets: globalButtonStyle.edgeInsetsMedium
             )
             return buttonStyleSheet
-        case .filter:
+        case .square:
             let buttonStyleSheet: ButtonAppearanceVariations = .init(
                 maxWidthRatio: globalButtonStyle.maxWidthRatioLarge,
                 heightLarge: globalButtonStyle.heightLarge,
@@ -346,125 +355,137 @@ enum ButtonType {
 }
 
 //MARK: - Custom Button Construction
-struct CustomButton: View {
-    // Parameters
-    var buttonParameters: ButtonParameters
-    var p: ButtonParameters { buttonParameters }
-    
-    // Body
-    var body: some View {
-        switch buttonParameters.buttonType {
-        case .circle:
-            CircleButton(p: buttonParameters)
-        case .micro:
-            CircleButton(p: buttonParameters)
-        case .tabSelector:
-            SquareButton(p: buttonParameters)
-        case .filter:
-            SquareButton(p: buttonParameters)
-        default:
-            switch p.action {
-            case .navigationLink(let isNavigating, let destination, let id, let action):
-                Button(action: {action(isNavigating, destination, id)}) {
-                    buttonTextOverlay(p: buttonParameters)
-                        .padding()
-                        .frame(maxWidth: UIScreen.main.bounds.width * buttonParameters.maxWidthRatio)
-                        .frame(height: buttonParameters.heightNum)
-                        .background(
-                            RoundedRectangle(cornerRadius: buttonParameters.cornerRadius)
-                                .stroke(Color.black, lineWidth: buttonParameters.buttonAppearance.borderWidth)
-                                .background(buttonParameters.computedBackgroundColor)
-                                .cornerRadius(buttonParameters.cornerRadius)
-                                .shadow(radius: buttonParameters.buttonAppearance.shadowRadius)
-                        )
-                }
-                .padding(EdgeInsets(top: p.buttonAppearance.edgeInsets/2, leading: 0, bottom: p.buttonAppearance.edgeInsets/2, trailing: 0))
-            }
-
-        }
+//struct CustomButton: View {
+//    // Parameters
+//    var buttonParameters: ButtonParameters
+//    var p: ButtonParameters { buttonParameters }
+//    
+//    var type: FetchableType?
+//    @Binding var animal: Animal?
+//    @Binding var location: Animal?
+//    @Binding var supply: Animal?
         
-    }
-}
+    // Body
+//    var body: some View {
+//        switch buttonParameters.buttonType {
+//        case .circle:
+//            CircleButton(p: buttonParameters)
+//        case .micro:
+//            CircleButton(p: buttonParameters)
+//        case .tabSelector:
+//            SquareButton(p: buttonParameters)
+//        case .square:
+//            SquareButton(p: buttonParameters)
+//        default:
+//            Text("Hello, World!")
+//            switch p.action {
+//            case .navigationLink(let isNavigating, let destination, let id, let action):
+//                Button(action: {action(isNavigating, destination, id)}) {
+//                    buttonTextOverlay(p: buttonParameters)
+//                        .padding()
+//                        .frame(maxWidth: UIScreen.main.bounds.width * buttonParameters.maxWidthRatio)
+//                        .frame(height: buttonParameters.heightNum)
+//                        .background(
+//                            RoundedRectangle(cornerRadius: buttonParameters.cornerRadius)
+//                                .stroke(Color.black, lineWidth: buttonParameters.buttonAppearance.borderWidth)
+//                                .background(buttonParameters.computedBackgroundColor)
+//                                .cornerRadius(buttonParameters.cornerRadius)
+//                                .shadow(radius: buttonParameters.buttonAppearance.shadowRadius)
+//                        )
+//                }
+//                .padding(EdgeInsets(top: p.buttonAppearance.edgeInsets/2, leading: 0, bottom: p.buttonAppearance.edgeInsets/2, trailing: 0))
+//            }
 
-private struct CircleButton: View {
-    let p: ButtonParameters
-    
-    var body: some View {
-        switch p.action {
-        case .navigationLink(let isNavigating, let destination, let id,  let action):
-            Button(action: {action(isNavigating, destination, id)}) {
-                buttonTextOverlay(p: p)
-                    .padding(p.fontSizeMultiplyer)
-                    .frame(maxWidth: p.heightNum)
-                    .frame(height: p.heightNum)
-                    .background(
-                        RoundedRectangle(cornerRadius: p.heightNum / 2)
-                            .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
-                            .background(p.computedBackgroundColor)
-                            .cornerRadius(p.heightNum / 2)
-                            .shadow(radius: p.buttonAppearance.shadowRadius)
-                    )
-            }
-            .padding(EdgeInsets(top: p.buttonAppearance.edgeInsets/2, leading: 0, bottom: p.buttonAppearance.edgeInsets/2, trailing: 0))
-        }
-    }
-}
+//        }
+//        
+//    }
+//}
+//
+//private struct CircleButton: View {
+//    let p: ButtonParameters
+//    
+//    var body: some View {
+//        switch p.action {
+//        case .navigationLink(let isNavigating, let destination, let id,  let action):
+//            Button(action: {action(isNavigating, destination, id)}) {
+//                buttonTextOverlay(p: p)
+//                    .padding(p.fontSizeMultiplyer)
+//                    .frame(maxWidth: p.heightNum)
+//                    .frame(height: p.heightNum)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: p.heightNum / 2)
+//                            .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
+//                            .background(p.computedBackgroundColor)
+//                            .cornerRadius(p.heightNum / 2)
+//                            .shadow(radius: p.buttonAppearance.shadowRadius)
+//                    )
+//            }
+//            .padding(EdgeInsets(top: p.buttonAppearance.edgeInsets/2, leading: 0, bottom: p.buttonAppearance.edgeInsets/2, trailing: 0))
+//        }
+//    }
+//}
 
-
-private struct SquareButton: View {
-    let p: ButtonParameters
-    
-    var body: some View {
-        switch p.action {
-        case .navigationLink(let isNavigating, let destination, let id,  let action):
-            Button(action: {action(isNavigating, destination, id)}) {
-                buttonTextOverlay(p: p)
-                    .padding(.top, 12)
-                    .padding(.horizontal, p.height == .tall ? 0 : 10)
-                    .padding(.bottom, p.height == .tall ? 0 : 10)
-                    .frame(maxWidth: p.heightNum)
-                    .frame(height: p.heightNum)
-                    .background(
-                        RoundedRectangle(cornerRadius: p.cornerRadius)
-                            .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
-                            .background(p.computedBackgroundColor)
-                            .cornerRadius(p.cornerRadius)
-                            .shadow(radius: p.buttonAppearance.shadowRadius)
-                    )
-            }
-            .padding(EdgeInsets(top: 0, leading: p.buttonAppearance.edgeInsets/2, bottom: 0, trailing: p.buttonAppearance.edgeInsets/2))
-        }
-    }
-}
+//
+//private struct SquareButton: View {
+//    let p: ButtonParameters
+//    
+//    var body: some View {
+//        switch p.action {
+//        case .navigationLink(let isNavigating, let destination, let id,  let action):
+//            Button(action: {action(isNavigating, destination, id)}) {
+//                buttonTextOverlay(p: p)
+//                    .padding(.top, 12)
+//                    .padding(.horizontal, p.height == .tall ? 0 : 10)
+//                    .padding(.bottom, p.height == .tall ? 0 : 10)
+//                    .frame(maxWidth: p.heightNum)
+//                    .frame(height: p.heightNum)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: p.cornerRadius)
+//                            .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
+//                            .background(p.computedBackgroundColor)
+//                            .cornerRadius(p.cornerRadius)
+//                            .shadow(radius: p.buttonAppearance.shadowRadius)
+//                    )
+//            }
+//            .padding(EdgeInsets(top: 0, leading: p.buttonAppearance.edgeInsets/2, bottom: 0, trailing: p.buttonAppearance.edgeInsets/2))
+//        }
+//    }
+//}
 
 //MARK: - Preview
-var int = 1
-func testAction(isNavigating: Binding<Bool>, destination: Binding<String>, id: String) {
-    print("Before setting: \(isNavigating.wrappedValue)")
-    print("Before setting: \(destination.wrappedValue)")
-    int += 1
-    isNavigating.wrappedValue = true
-    destination.wrappedValue = id
-    print("After setting: \(isNavigating.wrappedValue)")
-    print("After setting: \(destination.wrappedValue)")
-}
-
-#Preview {
-    @Previewable @State var isNavigating = false
-    @Previewable @State var destination: String = ""
-    var id: String = UUID().uuidString
-    CustomButton(buttonParameters: .init(id: id,
-                                         title: "Homestead",
-                                         data: "29 Head",
-                                         icon: "cat",
-                                         buttonType: .primary,
-                                         layout: .textLeftAlligned,
-                                         height: .tall,
-                                         isSelected: false,
-                                         action: .navigationLink(
-                                            isNavigating: $isNavigating,
-                                            destination: $destination,
-                                            id: id,
-                                            action: testAction))
-    )
-}
+//
+//var int = 1
+//func testAction(isNavigating: Binding<Bool>?, destination: Binding<String>, id: String) {
+//    print("Before setting: \(destination.wrappedValue)")
+//    print("Before setting: \(String(describing: isNavigating?.wrappedValue))")
+//    if let isNavigating = isNavigating {
+//        isNavigating.wrappedValue = true
+//    }
+//    int += 1
+//    destination.wrappedValue = id
+//    print("After setting: \(destination.wrappedValue)")
+//    print("After setting: \(String(describing: isNavigating?.wrappedValue))")
+//}
+//
+//#Preview {
+//    @Previewable @State var isNavigating = false
+//    @Previewable @State var destination: String = ""
+//    var id: String = UUID().uuidString
+//    CustomButton(buttonParameters: .init(id: id,
+//                                         title: "Homestead",
+//                                         data: "29 Head",
+//                                         icon: "cat",
+//                                         buttonType: .primary,
+//                                         layout: .textLeftAlligned,
+//                                         height: .tall,
+//                                         isSelected: false,
+//                                         requiresSubscription: false,
+//                                         activeSubscription: true,
+//                                         action: .navigationLink(
+//                                            isNavigating: nil,
+//                                            destination: $destination,
+//                                            id: id,
+//                                            action: testAction)
+//                                        )
+//    )
+//}

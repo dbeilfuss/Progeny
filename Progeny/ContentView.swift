@@ -9,83 +9,38 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var selectedOption: String? = "Herd"
+    @State private var selectedContent: String? = "Herd"
+
+    var body: some View {
+        TabbedContentView(selectedContent: $selectedContent)
+    }
     
-    let options: [String] = ["Herd", "Locations"]
+}
+
+struct TabbedContentView: View {
+    @Binding var selectedContent: String?
+    @State private var selectedDetail: ListItem?
+    @State private var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
+    
+    private var animalIcon: String { Constants().animalIcon }
+    private var animalName: String { Constants().terms.animalNamePlural }
     
     var body: some View {
-        NavigationSplitView {
-            List(selection: $selectedOption) {
-                ForEach(options, id: \.self) { item in
-                    NavigationLink(
-                        value: item,
-                        label: { Text(item) }
-                    )
-                }
+        TabView(selection: $selectedContent) {
+            AnimalListView(navigationTitle: animalName, listType: .animals)                .tabItem {
+                Image(animalIcon + "24")
+                    .renderingMode(.template)
             }
-        } detail: {
-            if selectedOption == "Herd" {
-                TestScrollView(itemList: optionList)
-            } else if selectedOption == "Locations" {
-                TestScrollView(itemList: locationList)
-            } else {
-                Text("Select an option")
-            }
+            AnimalListView(navigationTitle: "Locations", listType: .locations)
+                .tabItem { Image(systemName: "location") }
+            AnimalListView(navigationTitle: "Supplies", listType: .supplies)
+                .tabItem { Image(systemName: "pencil.and.list.clipboard") }
         }
     }
+    
 }
 
 #Preview {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)
 }
-
-
-
-//struct ContentView: View {
-//    @Environment(\.modelContext) private var modelContext
-//    @Query private var items: [Item]
-//
-//    var body: some View {
-//        TestScrollView()
-//        NavigationSplitView {
-//            List {
-//                ForEach(items) { item in
-//                    NavigationLink {
-//                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-//                    } label: {
-//                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-//                    }
-//                }
-//                .onDelete(perform: deleteItems)
-//            }
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    EditButton()
-//                }
-//                ToolbarItem {
-//                    Button(action: addItem) {
-//                        Label("Add Item", systemImage: "plus")
-//                    }
-//                }
-//            }
-//        } detail: {
-//            Text("Select an item")
-//        }
-//    }
-//
-//    private func addItem() {
-//        withAnimation {
-//            let newItem = Item(timestamp: Date())
-//            modelContext.insert(newItem)
-//        }
-//    }
-//
-//    private func deleteItems(offsets: IndexSet) {
-//        withAnimation {
-//            for index in offsets {
-//                modelContext.delete(items[index])
-//            }
-//        }
-//    }
-//}

@@ -34,7 +34,7 @@ struct buttonTextOverlay: View {
                 CellTextOverlay(p: p)
             case .tabSelector:
                 SquareOverlay(p: p)
-            case .filter:
+            case .square:
                 SquareOverlay(p: p)
                 
             }
