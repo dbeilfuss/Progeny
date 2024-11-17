@@ -15,6 +15,7 @@ enum ListType {
     case animals
     case locations
     case supplies
+    case hyperlinks
     
     var parameters: ButtonParameters {
         switch self {
@@ -46,6 +47,16 @@ enum ListType {
                 height: .tall,
                 isSelected: false,
                 requiresSubscription: false,
+                activeSubscription: true
+                )
+        case .hyperlinks:
+            return ButtonParameters (
+                title: "N/A",
+                buttonType: .hyperlink,
+                layout: .textLeftAlligned,
+                height: .short,
+                isSelected: false,
+                requiresSubscription: true,
                 activeSubscription: true
                 )
         }
@@ -80,38 +91,6 @@ struct ListItem {
     }
 }
 
-
-//MARK: - Helper Functions
-//func convertToButtonList(for originalList: [Fetchable]) -> [ListItem] {
-//    let k = Constants()
-//    var buttonList: [ListItem] = []
-//    
-//    for item in originalList {
-//        switch item {
-//        case let listItem as ListItem:
-//            buttonList.append(listItem)
-//        case let animal as Animal:
-//            let id: UUID = animal.id
-//            var name: String = ""
-//            
-//            switch animal.name {
-//            case nil:
-//                name = animal.visibleID ?? ""
-//            default :
-//                name = (animal.name! + (animal.visibleID == "" ? "" : (animal.visibleID != nil ? (": " + (animal.visibleID!)) : "")))
-//            }
-//            
-//            let listItem = ListItem(id: id, name: name, icon: k.animalIcon, data: "")
-//            buttonList.append(listItem)
-//        default:
-//            print("unable to determin list item type: \(#function)")
-//            break
-//        }
-//    }
-//    
-//    return buttonList
-//}
-
 struct DestinationView: View {
     let item: ListItem
     
@@ -121,8 +100,8 @@ struct DestinationView: View {
 }
 
 #Preview {
-    @Previewable @State var selectedItem: ListItem?
-    AnimalListView(navigationTitle: "List Scroll View", listType: .animals)
+    @Previewable @State var previewAnimal: Animal = AnimalClass().testAnimalList[2]
+    AnimalDetailView(animal: previewAnimal)
 }
 
 //MARK: - Initial Testing Data

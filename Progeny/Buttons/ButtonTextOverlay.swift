@@ -184,34 +184,40 @@ struct HyperlinkTextOverlay: View {
     var body: some View {
         switch p.layout {
         case .textLeftAlligned:
-            if let icon = p.icon {
-                fetchIcon(icon)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: p.heightNum * iconMultiplyer)
-                    .frame(maxWidth: p.heightNum * iconMultiplyer)
+            HStack() {
+                if let icon = p.icon {
+                    fetchIcon(icon)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: p.heightNum * iconMultiplyer)
+                        .frame(maxWidth: p.heightNum * iconMultiplyer)
+                }
+                Text(p.title)
+                    .scaleEffect(p.fontSizeMultiplyer)
+                Spacer()
             }
-            Text(p.title)
-                .scaleEffect(p.fontSizeMultiplyer)
-            Spacer()
         case .textRightAlligned:
-            Spacer()
-            if let icon = p.icon {
-                fetchIcon(icon)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: p.heightNum * iconMultiplyer)
-                    .frame(maxWidth: p.heightNum * iconMultiplyer)
+            HStack() {
+                if let icon = p.icon {
+                    fetchIcon(icon)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: p.heightNum * iconMultiplyer)
+                        .frame(maxWidth: p.heightNum * iconMultiplyer)
+                }
+                Spacer()
+                Text(p.title)
+                    .scaleEffect(p.fontSizeMultiplyer)
             }
-            Text(p.title)
-                .scaleEffect(p.fontSizeMultiplyer)
         case .centerText:
-            if let icon = p.icon {
-                fetchIcon(icon)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: p.heightNum * iconMultiplyer)
-                    .frame(maxWidth: p.heightNum * iconMultiplyer)
+            HStack() {
+                if let icon = p.icon {
+                    fetchIcon(icon)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: p.heightNum * iconMultiplyer)
+                        .frame(maxWidth: p.heightNum * iconMultiplyer)
+                }
+                Text(p.title)
+                    .scaleEffect(p.fontSizeMultiplyer)
             }
-            Text(p.title)
-                .scaleEffect(p.fontSizeMultiplyer)
         }
     }
 }

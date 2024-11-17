@@ -54,7 +54,6 @@ struct AnimalEditorBinding {
 
 struct AnimalScrollView: View {
     @Binding var animalList: [Animal]
-//    @Binding var selectedAnimal: Animal
     var onTap: (Animal) -> Void
 
     var listType: ListType = .animals
@@ -102,6 +101,8 @@ struct AnimalListViewiPad: View {
     @Binding var selectedAnimal: Animal
     @Binding var navigationTitle: String
     @State private var columnVisibility = NavigationSplitViewVisibility.all
+//    @State private var detailNavigationPath: [Animal] = []
+
     var isPortrait: Bool {
         UIDevice.current.orientation.isPortrait
     }
@@ -116,7 +117,12 @@ struct AnimalListViewiPad: View {
             })
             .padding()
         } detail: {
-            AnimalEditorView(animal: selectedAnimal)
+            NavigationStack() {
+                AnimalDetailView(animal: selectedAnimal)
+                    .navigationTitle(selectedAnimal.name ?? "Animal Details")
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+
         }
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
@@ -154,7 +160,7 @@ struct AnimalListViewiPhone: View {
                     isUserInitiatedSelection = false
                 }
                 .navigationDestination(isPresented: $showEditor) {
-                    AnimalEditorView(animal: selectedAnimal)
+                    AnimalDetailView(animal: selectedAnimal)
                 }
         }
     }
