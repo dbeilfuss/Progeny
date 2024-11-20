@@ -10,9 +10,9 @@ import Foundation
 class AnimalClass: ObservableObject {
     
     @Published var testAnimalList: [Animal] = [
+        Animal(name: "Kojak", sex: .male, status: .active),
         Animal(visibleID: "0085", sex: .female, status: .active),
-        Animal(visibleID: "0104", sex: .female, status: .active),
-        Animal(name: "Kojak", sex: .male, status: .active)
+        Animal(visibleID: "0104", sex: .female, status: .active)
     ]
     
 }
