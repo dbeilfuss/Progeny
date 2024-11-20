@@ -11,7 +11,7 @@ struct AnimalSortView: View {
     @State var originalAnimalList: [Animal]
     @Binding var sortedAnimalList: [Animal]
     @State private var sortOption: SortOption = .none
-    
+    @State private var lastOption: SortOption?
     
     var body: some View {
             VStack {
@@ -21,7 +21,8 @@ struct AnimalSortView: View {
                         ForEach(SortOption.allCases, id: \.self) { option in
                             Button(action: {
                                 sortOption = option
-                                sortedAnimalList = sortAnimalList(by: option, for: originalAnimalList)
+                                sortedAnimalList = sortAnimalList(by: option, for: originalAnimalList, lastOption: lastOption)
+                                lastOption = lastOption == option ? nil : sortOption
                             }) {
                                 Text(option.displayName)
                                     .padding()
@@ -34,15 +35,16 @@ struct AnimalSortView: View {
                     .padding(.horizontal)
                 }
                 .onAppear(perform: {
-                    sortedAnimalList = sortAnimalList(by: .none, for: originalAnimalList)
+                    sortedAnimalList = sortAnimalList(by: .none, for: originalAnimalList, lastOption: lastOption)
                 })
             }
         }
     
-    private func sortAnimalList(by option: SortOption, for list: [Animal]) -> [Animal] {
+    private func sortAnimalList(by option: SortOption, for list: [Animal], lastOption: SortOption?) -> [Animal] {
+        // Properties
         var sortedAnimalList: [Animal] = list
-        print("All Sorted Cows: \(sortedAnimalList.compactMap( { $0.id.uuidString }))")
-        print("All Original Cows: \(list.compactMap( { $0.id.uuidString }))")
+
+        // Sort
         switch option {
         case .none:
             sortedAnimalList = list
@@ -53,9 +55,12 @@ struct AnimalSortView: View {
                 (a.sex.rawValue).localizedCaseInsensitiveCompare(b.sex.rawValue) == .orderedAscending }
         }
         
-        print("All Sorted Cows: \(sortedAnimalList.compactMap( { $0.id.uuidString }))")
-        print("All Original Cows: \(list.compactMap( { $0.id.uuidString }))")
+        // Reverse as Needed
+        if lastOption == option {
+            sortedAnimalList.reverse()
+        }
         
+        // Return
         return sortedAnimalList
     }
     

@@ -107,21 +107,13 @@ struct AnimalListViewiPad: View {
                 .padding(.vertical, 5)
             AnimalScrollView(animalList: $sortedAnimalList, onTap: { animal in
                 if let selectedAnimal = animalList.first(where: { $0.id == animal.id }) { // Fetch the Animal
-                    print("found")
                     self.selectedAnimal = selectedAnimal // Pass the Animal
                     
                     if isPortrait {
                         columnVisibility = .detailOnly  // Adjust the Column
                     }
                 } else {
-                    print("not found: \(animal.id.uuidString)")
-                    print("Kojak ID Sorted: \(sortedAnimalList.first(where: { $0.name == "Kojak" })?.id.uuidString ?? "Not Found")")
-                    print("Kojak ID Original: \(animalList.first(where: { $0.name == "Kojak" })?.id.uuidString ?? "Not Found"))")
                     let newKojak: Animal = animalList.first(where: { $0.name == "Kojak" })!
-                    print("Kojak ID New: \(newKojak.id.uuidString)")
-                    print("All Sorted Cows: \(sortedAnimalList.compactMap( { $0.id.uuidString }))")
-                    print("All Original Cows: \(animalList.compactMap( { $0.id.uuidString }))")
-
                 }
             })
             .padding()
