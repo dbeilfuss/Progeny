@@ -35,57 +35,12 @@ struct AnimalListView: View {
         if horizontalSizeClass == .regular {
             AnimalListViewiPad(animalList: $animalList, selectedAnimal: $selectedAnimal, navigationTitle: $navigationTitle)
         } else {
-            AnimalListViewiPhone(animalList: $animalList, selectedAnimal: $selectedAnimal, navigationTitle: $navigationTitle)
+            AnimalListViewiPhone(animalList: $animalList, navigationTitle: $navigationTitle, selectedAnimal: $selectedAnimal)
         }
     }
 }
 
-//MARK: - SubViews
-
-
-struct AnimalScrollView: View {
-    @Binding var animalList: [Animal]
-    var onTap: (Animal) -> Void
-    
-    var listType: ListType = .animals
-    private var p: ButtonParameters { listType.parameters }
-    
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 10) {
-                ForEach(animalList, id: \.id) { animal in
-                    Button {
-                        onTap(animal)
-                    } label: {
-                        let listItem: ListItem = ListItem(from: animal)
-                        PrimaryTextOverlay(p: ButtonParameters(
-                            title: (listItem.name == "" ? listItem.data : listItem.name) ?? "No ID",
-                            data: listItem.data,
-                            icon: listItem.icon,
-                            buttonType: p.buttonType,
-                            layout: p.layout,
-                            height: p.height,
-                            isSelected: false,
-                            requiresSubscription: true,
-                            activeSubscription: true
-                        ))
-                        .padding()
-                        .frame(height: p.heightNum)
-                        .foregroundColor(p.computedForegroundColor)
-                    }
-                    .frame(maxWidth: UIScreen.main.bounds.width * p.maxWidthRatio)
-                    .background(alignment: .center) {
-                        RoundedRectangle(cornerRadius: p.cornerRadius)
-                            .stroke(Color.black, lineWidth: p.buttonAppearance.borderWidth)
-                            .background(p.computedBackgroundColor)
-                            .cornerRadius(p.cornerRadius)
-                            .shadow(radius: p.buttonAppearance.shadowRadius)
-                    }
-                }
-            }
-        }
-    }
-}
+//MARK: - iPad
 
 struct AnimalListViewiPad: View {
     @Binding var animalList: [Animal]
@@ -101,7 +56,7 @@ struct AnimalListViewiPad: View {
     var body: some View {
         
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            AnimalSortView(originalAnimalList: animalList, sortedAnimalList: $sortedAnimalList)
+            AnimalSortView(originalAnimalList: $animalList, sortedAnimalList: $sortedAnimalList)
             Divider()
                 .padding(.horizontal)
                 .padding(.vertical, 5)
@@ -112,11 +67,15 @@ struct AnimalListViewiPad: View {
                     if isPortrait {
                         columnVisibility = .detailOnly  // Adjust the Column
                     }
-                } else {
-                    let newKojak: Animal = animalList.first(where: { $0.name == "Kojak" })!
                 }
             })
             .padding()
+            
+            AddPropertyButton(title: "Add \(Constants().terms.animalNameSingular)", icon: "plus") {
+                let newAnimal = Animal(sex: .female, status: .active)
+                animalList.append(newAnimal)
+            }
+
         } detail: {
             NavigationStack() {
                 AnimalDetailView(animal: selectedAnimal)
@@ -133,17 +92,24 @@ struct AnimalListViewiPad: View {
     }
 }
 
+//MARK: - iPhone
 struct AnimalListViewiPhone: View {
+    // Animal List
     @Binding var animalList: [Animal]
     @State private var sortedAnimalList: [Animal] = [Animal(sex: .unknown, status: .inactive(date: Date()))]
-    @Binding var selectedAnimal: Animal
     @Binding var navigationTitle: String
+    
+    // Editor View
+    @Binding var selectedAnimal: Animal
     @State private var showEditor = false
     @State private var isUserInitiatedSelection = false
     
+    // Add Animal View
+    @State private var showAnimalTypeSelection = false
+    
     var body: some View {
         NavigationStack {
-            AnimalSortView(originalAnimalList: animalList, sortedAnimalList: $sortedAnimalList)
+            AnimalSortView(originalAnimalList: $animalList, sortedAnimalList: $sortedAnimalList)
             Divider()
                 .padding(.horizontal)
                 .padding(.vertical, 5)
@@ -171,22 +137,18 @@ struct AnimalListViewiPhone: View {
             .navigationDestination(isPresented: $showEditor) {
                 AnimalDetailView(animal: selectedAnimal)
             }
-        }
-    }
-}
-
-//MARK: - Helper Functions
-
-struct AnimalEditorBinding {
-    static func binding(for animalList: Binding<[Animal]>, selectedAnimal: Binding<Animal?>) -> Binding<Animal?> {
-        Binding(
-            get: { selectedAnimal.wrappedValue },
-            set: { newAnimal in
-                if let newAnimal, let index = animalList.wrappedValue.firstIndex(where: { $0.id == newAnimal.id }) {
-                    animalList.wrappedValue[index] = newAnimal
+            AddPropertyButton(title: "Add \(Constants().terms.animalNameSingular)", icon: "plus") {
+                showAnimalTypeSelection = true
+            }
+            .sheet(isPresented: $showAnimalTypeSelection) {
+                AnimalTypeSelectionView { selectedType in
+                    // Use selectedType if needed in the future
+                    let newAnimal = Animal(sex: .female, status: .active)
+                    animalList.append(newAnimal)
+                    showAnimalTypeSelection = false
                 }
             }
-        )
+        }
     }
 }
 

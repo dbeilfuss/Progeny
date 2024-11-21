@@ -66,7 +66,7 @@ private let globalColorSheet: ColorStyleSheet = .init(
     quaternary: .yellow,
     
     fontColor: .black,
-    fontColorHighlighted: .black,
+    fontColorHighlighted: .white,
     buttonBackgroundColor: .white,
     disabledColor: .gray,
     highlightColor: .teal

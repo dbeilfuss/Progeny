@@ -13,6 +13,8 @@ struct Constants {
     var terms = Terms(
         animalNameSingular: "Cow",
         animalNamePlural: "Cows",
+        animalBabyName: "Calf",
+        animalBabyNamePlural: "Calfs",
         animalGroup: "Herd"
     )
 }
@@ -20,5 +22,7 @@ struct Constants {
 struct Terms {
     var animalNameSingular: String
     var animalNamePlural: String
+    var animalBabyName: String
+    var animalBabyNamePlural: String
     var animalGroup: String
 }

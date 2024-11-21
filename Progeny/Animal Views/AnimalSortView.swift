@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AnimalSortView: View {
-    @State var originalAnimalList: [Animal]
+    @Binding var originalAnimalList: [Animal]
     @Binding var sortedAnimalList: [Animal]
     @State private var sortOption: SortOption = .none
     @State private var lastOption: SortOption?
@@ -20,9 +20,7 @@ struct AnimalSortView: View {
                     HStack {
                         ForEach(SortOption.allCases, id: \.self) { option in
                             Button(action: {
-                                sortOption = option
-                                sortedAnimalList = sortAnimalList(by: option, for: originalAnimalList, lastOption: lastOption)
-                                lastOption = lastOption == option ? nil : sortOption
+                                sortAction(option: option, isUserInitiatedSelection: true)
                             }) {
                                 Text(option.displayName)
                                     .padding()
@@ -38,7 +36,15 @@ struct AnimalSortView: View {
                     sortedAnimalList = sortAnimalList(by: .none, for: originalAnimalList, lastOption: lastOption)
                 })
             }
-        }
+            .onChange(of: originalAnimalList) {
+                sortAction(option: lastOption ?? .none, isUserInitiatedSelection: false)
+            }
+    }
+    
+    private func sortAction(option: SortOption, isUserInitiatedSelection: Bool) { sortOption = option
+        sortedAnimalList = sortAnimalList(by: option, for: originalAnimalList, lastOption: isUserInitiatedSelection ? lastOption : nil)
+        lastOption = lastOption == option ? nil : sortOption
+    }
     
     private func sortAnimalList(by option: SortOption, for list: [Animal], lastOption: SortOption?) -> [Animal] {
         // Properties
