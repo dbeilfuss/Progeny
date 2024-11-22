@@ -13,11 +13,35 @@ struct AnimalTypeSelectionView: View {
     private var p: ButtonParameters { ListType.animals.parameters }
     private var options: [String] { ["Adult", "\(t.animalBabyName)"] }
 
+    @Binding var isPresented: Bool
     var onSelect: (String) -> Void
     var body: some View {
         VStack(spacing: 20) {
-            Text("Add \(t.animalNameSingular)")
-                .font(.headline)
+            HStack {
+                HStack {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                    .font(.body)
+                    .foregroundStyle(s.colors.primary)
+                }
+                .alignmentGuide(HorizontalAlignment.leading) { _ in 0 }
+                .frame(width: UIScreen.main.bounds.width / 3)
+
+                Spacer()
+                
+                Text("Add \(t.animalNameSingular)")
+                    .font(.headline)
+                    .frame(width: UIScreen.main.bounds.width / 3)
+                
+                HStack {
+                    Spacer()
+                }
+                .frame(width: UIScreen.main.bounds.width / 3)
+
+
+            }
+
             Spacer()
             
             ForEach(options, id: \.self) { option in
@@ -54,9 +78,9 @@ struct AnimalTypeSelectionView: View {
 
 #Preview {
     @Previewable @State var selectedItem: ListItem?
-//    AnimalListView(navigationTitle: "List Scroll View", listType: .animals)
+    @Previewable @State var isPresented: Bool = true
     
-    AnimalTypeSelectionView() { selectedType in
+    AnimalTypeSelectionView(isPresented: $isPresented) { selectedType in
         testFunction(selectedItem: selectedType)
     }
 }

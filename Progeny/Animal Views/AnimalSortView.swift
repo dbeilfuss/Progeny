@@ -55,7 +55,7 @@ struct AnimalSortView: View {
         case .none:
             sortedAnimalList = list
         case .alphabetical:
-            sortedAnimalList.sort { ($0.name ?? "").localizedCaseInsensitiveCompare($1.name ?? "") == .orderedAscending }
+            sortedAnimalList.sort { ($0.name ?? $0.visibleID ?? "").localizedCaseInsensitiveCompare($1.name ?? $0.visibleID ?? "") == .orderedAscending }
         case .bySex:
             sortedAnimalList.sort { (a: Animal, b: Animal) in
                 (a.sex.rawValue).localizedCaseInsensitiveCompare(b.sex.rawValue) == .orderedAscending }

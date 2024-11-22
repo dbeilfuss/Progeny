@@ -141,11 +141,13 @@ struct AnimalListViewiPhone: View {
                 showAnimalTypeSelection = true
             }
             .sheet(isPresented: $showAnimalTypeSelection) {
-                AnimalTypeSelectionView { selectedType in
+                AnimalTypeSelectionView(isPresented: $showAnimalTypeSelection) { selectedType in
                     // Use selectedType if needed in the future
                     let newAnimal = Animal(sex: .female, status: .active)
                     animalList.append(newAnimal)
                     showAnimalTypeSelection = false
+                    selectedAnimal = newAnimal
+                    isUserInitiatedSelection = true
                 }
             }
         }
