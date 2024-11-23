@@ -43,11 +43,17 @@ struct AnimalListView: View {
 //MARK: - iPad
 
 struct AnimalListViewiPad: View {
+    // Animal List
     @Binding var animalList: [Animal]
     @State private var sortedAnimalList: [Animal] = [Animal(sex: .unknown, status: .inactive(date: Date()))]
+    
+    // Editor View
     @Binding var selectedAnimal: Animal
     @Binding var navigationTitle: String
     @State private var columnVisibility = NavigationSplitViewVisibility.all
+    
+    // Add Animal View
+    @State private var showAnimalTypeSelection = false
     
     var isPortrait: Bool {
         UIDevice.current.orientation.isPortrait
@@ -70,10 +76,8 @@ struct AnimalListViewiPad: View {
                 }
             })
             .padding()
-            
             AddPropertyButton(title: "Add \(Constants().terms.animalNameSingular)", icon: "plus") {
-                let newAnimal = Animal(sex: .female, status: .active)
-                animalList.append(newAnimal)
+                showAnimalTypeSelection = true
             }
 
         } detail: {
@@ -89,7 +93,18 @@ struct AnimalListViewiPad: View {
         .onAppear {
             columnVisibility = .all
         }
+        .sheet(isPresented: $showAnimalTypeSelection) {
+            AnimalTypeSelectionView(isPresented: $showAnimalTypeSelection) { selectedType in
+                // Use selectedType if needed in the future
+                let newAnimal = Animal(sex: .female, status: .active)
+                animalList.append(newAnimal)
+                showAnimalTypeSelection = false
+                selectedAnimal = newAnimal
+                columnVisibility = .detailOnly
+            }
+        }
     }
+
 }
 
 //MARK: - iPhone

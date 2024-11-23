@@ -72,10 +72,8 @@ struct ListItem {
         var name: String {
             if animal.name != nil {
                 animal.name!
-            } else if animal.visibleID != nil {
-                animal.visibleID!
             } else {
-                ""
+                animal.visibleID
             }
         }
         

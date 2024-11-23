@@ -13,15 +13,17 @@ struct AnimalEditorView: View {
     
     // State to track if a nil property field should be shown
     @State private var isAddingBreed: Bool = false
-
-    // Computed properties for each binding
-    private var visibleIDBinding: Binding<String> {
-        Binding(
-            get: { animal.visibleID ?? "" },
-            set: { animal.visibleID = $0.isEmpty ? nil : $0 }
-        )
+    @State private var isAddingLineage: Bool = false
+    private var hasLineage: Bool {
+        if animal.damID == nil && animal.sireID == nil && animal.surrogateDamID == nil && !isAddingLineage {
+            return false
+        } else {
+            return true
+        }
     }
     
+    // Computed properties for each binding
+
     private var nameBinding: Binding<String> {
         Binding(
             get: { animal.name ?? "" },
@@ -57,14 +59,23 @@ struct AnimalEditorView: View {
         )
     }
     
+    private var sireIDBinding: Binding<String> {
+        Binding(
+            get: { animal.sireID ?? "" },
+            set: { animal.sireID = $0 }
+        )
+    }
+    
     var body: some View {
         Form {
-            Section(header: Text("\(Constants().terms.animalNameSingular): \(animal.name ?? animal.visibleID ?? "")")) {
-                TextField("ID", text: visibleIDBinding)
+            
+            // General
+            Section(header: Text("\(Constants().terms.animalNameSingular): \(animal.name ?? animal.visibleID)")) {
+                TextField("ID", text: $animal.visibleID)
                 TextField("Name", text: nameBinding)
-                if isAddingBreed || animal.breed != nil {
-                    TextField("Breed", text: breedBinding)
-                }
+                //                if isAddingBreed || animal.breed != nil {
+                //                    TextField("Breed", text: breedBinding)
+                //                }
                 Picker("Sex", selection: sexBinding) {
                     ForEach(Sex.allCases, id: \.self) { sex in
                         Text(sex.rawValue).tag(sex)
@@ -72,21 +83,57 @@ struct AnimalEditorView: View {
                 }
                 
                 DatePicker("Date of Birth", selection: birthDateBinding, displayedComponents: [.date]
-)
-
+                )
+                
                 DatePicker("Date of Purchase", selection: purchaseDateBinding, displayedComponents: [.date]
-)
+                )
             }
             
-            Section {
-                if animal.breed == nil && !isAddingBreed {
-                    AddPropertyButton(title: "Add Breed", icon: "plus") {
-                        isAddingBreed = true
-                    }
+            // Breed
+            if isAddingBreed || animal.breed != nil {
+                Section(header: Text("Breed")) {
+                    TextField("Breed", text: breedBinding)
                 }
             }
+            
+            // Lineage
+            if isAddingLineage || hasLineage {
+                Section(header: Text("Lineage")) {
+                    TextField("Sire", text: sireIDBinding)
+                }
+                
+                Picker("Sire", selection: sireIDBinding) {
+                    let possibleSires: [Animal] = AnimalClass().testAnimalList
+                        .filter {
+                        $0.sex == .male }
+                        .filter {
+                            $0.visibleID != animal.visibleID
+                    }
+                    
+                    ForEach(possibleSires, id: \.id) { sire in
+                        Text(sire.name ?? sire.visibleID ?? "Unknown").tag(sire.id) }
+                }
+                
+            }
+        
+        // Add Sections
+            if (animal.breed == nil && !isAddingBreed) || !hasLineage {
+                Section(header: Text("Add Section")) {
+                    if animal.breed == nil && !isAddingBreed {
+                        AddPropertyButton(title: "Breed", icon: "plus") {
+                            isAddingBreed = true
+                        }
+                    }
+                    
+                    if !hasLineage && !isAddingLineage {
+                        AddPropertyButton(title: "Lineage", icon: "plus") {
+                            isAddingLineage = true
+                        }
+                    }
+                }
+                .navigationTitle("Edit Animal")
+            }
         }
-        .navigationTitle("Edit Animal")
     }
     
 }

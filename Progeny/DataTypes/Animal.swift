@@ -48,7 +48,7 @@ class Animal: ObservableObject, Identifiable, Hashable {
     
     // Identity
     let id: UUID
-    @Published var visibleID: String?
+    @Published var visibleID: String
     @Published var name: String?
     @Published var breed: String?
     @Published var sex: Sex
@@ -70,7 +70,7 @@ class Animal: ObservableObject, Identifiable, Hashable {
     
     init(
         id: UUID = UUID(),
-        visibleID: String? = nil,
+        visibleID: String = "N/A",
         name: String? = nil,
         breed: String? = nil,
         sex: Sex,

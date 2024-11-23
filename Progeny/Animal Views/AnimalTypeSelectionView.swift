@@ -24,6 +24,8 @@ struct AnimalTypeSelectionView: View {
                     }
                     .font(.body)
                     .foregroundStyle(s.colors.primary)
+                    .padding(.leading, 30)
+                    Spacer()
                 }
                 .alignmentGuide(HorizontalAlignment.leading) { _ in 0 }
                 .frame(width: UIScreen.main.bounds.width / 3)
