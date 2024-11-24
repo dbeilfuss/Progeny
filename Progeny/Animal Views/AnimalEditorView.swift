@@ -111,7 +111,7 @@ struct AnimalEditorView: View {
                     }
                     
                     ForEach(possibleSires, id: \.id) { sire in
-                        Text(sire.name ?? sire.visibleID ?? "Unknown").tag(sire.id) }
+                        Text(sire.name ?? sire.visibleID).tag(sire.id) }
                 }
                 
             }

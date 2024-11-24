@@ -68,6 +68,7 @@ struct ListItem {
     let icon: String?
     let data: String?
     
+    // Initializer for Animal
     init(from animal: Animal) {
         var name: String {
             if animal.name != nil {
@@ -80,6 +81,13 @@ struct ListItem {
         self.name = name
         self.icon = Constants().animalIcon
         self.data = animal.visibleID
+    }
+    
+    // Initializer for Location
+    init(from location: Location) {
+        self.name = location.name
+        self.icon = "mappin.and.ellipse" // Placeholder icon for a location
+        self.data = location.address ?? "No address provided"
     }
     
     init(name: String, icon: String?, data: String?) {

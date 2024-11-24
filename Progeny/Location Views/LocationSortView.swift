@@ -1,15 +1,16 @@
 //
-//  AnimalSortView.swift
+//  LocationSortView.swift
 //  Progeny
 //
-//  Created by Daniel Beilfuss on 11/19/24.
+//  Created by Daniel Beilfuss on 11/23/24.
 //
+
 
 import SwiftUI
 
-struct AnimalSortView: View {
-    @Binding var originalAnimalList: [Animal]
-    @Binding var sortedAnimalList: [Animal]
+struct LocationSortView: View {
+    @Binding var originalLocationList: [Location]
+    @Binding var sortedLocationList: [Location]
     @State private var sortOption: SortOption = .none
     @State private var lastOption: SortOption?
     
@@ -33,53 +34,50 @@ struct AnimalSortView: View {
                     .padding(.horizontal)
                 }
                 .onAppear(perform: {
-                    sortedAnimalList = sortAnimalList(by: .none, for: originalAnimalList, lastOption: lastOption)
+                    sortedLocationList = sortLocationList(by: .none, for: originalLocationList, lastOption: lastOption)
                 })
             }
-            .onChange(of: originalAnimalList) {
+            .onChange(of: originalLocationList) {
                 sortAction(option: lastOption ?? .none, isUserInitiatedSelection: false)
             }
     }
     
     private func sortAction(option: SortOption, isUserInitiatedSelection: Bool) { sortOption = option
-        sortedAnimalList = sortAnimalList(by: option, for: originalAnimalList, lastOption: isUserInitiatedSelection ? lastOption : nil)
+        sortedLocationList = sortLocationList(by: option, for: originalLocationList, lastOption: isUserInitiatedSelection ? lastOption : nil)
         lastOption = lastOption == option ? nil : sortOption
     }
     
-    private func sortAnimalList(by option: SortOption, for list: [Animal], lastOption: SortOption?) -> [Animal] {
+    private func sortLocationList(by option: SortOption, for list: [Location], lastOption: SortOption?) -> [Location] {
         // Properties
-        var sortedAnimalList: [Animal] = list
+        var sortedLocationList: [Location] = list
 
         // Sort
         switch option {
         case .none:
-            sortedAnimalList = list
+            sortedLocationList = list
         case .alphabetical:
-            sortedAnimalList.sort { ($0.name ?? $0.visibleID).localizedCaseInsensitiveCompare($1.name ?? $0.visibleID) == .orderedAscending }
-        case .bySex:
-            sortedAnimalList.sort { (a: Animal, b: Animal) in
-                (a.sex.rawValue).localizedCaseInsensitiveCompare(b.sex.rawValue) == .orderedAscending }
+            sortedLocationList.sort {
+                $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+            }
         }
         
         // Reverse as Needed
         if lastOption == option {
-            sortedAnimalList.reverse()
+            sortedLocationList.reverse()
         }
         
         // Return
-        return sortedAnimalList
+        return sortedLocationList
     }
     
     enum SortOption: String, CaseIterable {
         case none
         case alphabetical
-        case bySex
 
         var displayName: String {
             switch self {
             case .none: return "None"
             case .alphabetical: return "A-Z"
-            case .bySex: return "Sex"
             }
         }
     }
@@ -87,5 +85,5 @@ struct AnimalSortView: View {
 
 #Preview {
     @Previewable @State var selectedItem: ListItem?
-    AnimalListView(navigationTitle: "List Scroll View", listType: .animals)
+    LocationListView(navigationTitle: "List Scroll View", listType: .locations)
 }

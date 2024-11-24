@@ -57,13 +57,12 @@ struct PrimaryTextOverlay: View {
         case .textLeftAlligned:
             Text(p.title)
                 .scaleEffect(p.fontSizeMultiplyer)
-            Spacer()
+                .lineLimit(0)
             if let icon = p.icon {
                 fetchIcon(icon)
                     .aspectRatio(contentMode: .fit)
                     .frame(height: p.heightNum * iconMultiplyer)
                     .frame(maxWidth: p.heightNum * iconMultiplyer)
-                
             }
         case .textRightAlligned:
             if let icon = p.icon {
@@ -71,14 +70,16 @@ struct PrimaryTextOverlay: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(height: p.heightNum * iconMultiplyer)
                     .frame(maxWidth: p.heightNum * iconMultiplyer)
-                
+                    .padding(.trailing, 8)
             }
-            Spacer()
             Text(p.title)
                 .scaleEffect(p.fontSizeMultiplyer)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .lineLimit(0)
         case .centerText:
             Text(p.title)
                 .scaleEffect(p.fontSizeMultiplyer)
+                .lineLimit(0)
         }
     }
 }
@@ -385,4 +386,9 @@ func fetchIcon(_ iconName: String) -> Image {
         return Image(systemName: iconName)
             .resizable()
     }
+}
+
+#Preview {
+    ContentView()
+        .modelContainer(for: Item.self, inMemory: true)
 }

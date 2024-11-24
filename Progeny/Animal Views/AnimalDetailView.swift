@@ -12,11 +12,11 @@ struct AnimalDetailView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("\(Constants().terms.animalNameSingular): \(animal.name ?? animal.visibleID ?? "")")) {
+            Section(header: Text("\(Constants().terms.animalNameSingular): \(animal.name ?? animal.visibleID)")) {
                 HStack {
                     Text("ID")
                     Spacer()
-                    Text(animal.visibleID ?? "N/A")
+                    Text(animal.visibleID)
                         .foregroundColor(.secondary)
                 }
 
