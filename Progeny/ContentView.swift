@@ -43,9 +43,9 @@ struct TabbedContentView: View {
                 .tag(2)
                 .padding(.bottom, 10)
 
-            AnimalListView(navigationTitle: "Supplies", listType: .supplies)
+            SupplyItemListView(navigationTitle: "Supplies", listType: .supplyItems)
                 .tabItem {
-                    Image(systemName: "pencil.and.list.clipboard")
+                    Image(systemName: "list.clipboard")
                 }
                 .tag(3)
                 .padding(.bottom, 10)

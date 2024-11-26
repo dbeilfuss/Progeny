@@ -45,17 +45,6 @@ struct LocationListView: View {
 struct LocationListViewiPad: View {
     // Location List
     @Binding var locationList: [Location]
-    @State private var sortedLocationList: [Location] = [
-        Location(
-            name: "Unnamed Location",
-            coordinates: nil,
-            address: nil,
-            description: "No description provided.",
-            photo: nil,
-            animals: nil,
-            isPinned: false
-        )
-    ]
     
     // Editor View
     @Binding var selectedLocation: Location
@@ -72,11 +61,10 @@ struct LocationListViewiPad: View {
     var body: some View {
         
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            LocationSortView(originalLocationList: $locationList, sortedLocationList: $sortedLocationList)
             Divider()
                 .padding(.horizontal)
                 .padding(.vertical, 5)
-            LocationScrollView(locationList: $sortedLocationList, onTap: { location in
+            LocationScrollView(locationList: $locationList, onTap: { location in
                 if let selectedLocation = locationList.first(where: { $0.id == location.id }) {
                     self.selectedLocation = selectedLocation
                     
@@ -123,17 +111,6 @@ struct LocationListViewiPad: View {
 struct LocationListViewiPhone: View {
     // Location List
     @Binding var locationList: [Location]
-    @State private var sortedLocationList: [Location] = [
-        Location(
-            name: "Unnamed Location",
-            coordinates: nil,
-            address: nil,
-            description: "No description provided.",
-            photo: nil,
-            animals: nil,
-            isPinned: false
-        )
-    ]
     @Binding var navigationTitle: String
     
     // Editor View
@@ -146,11 +123,10 @@ struct LocationListViewiPhone: View {
     
     var body: some View {
         NavigationStack {
-            LocationSortView(originalLocationList: $locationList, sortedLocationList: $sortedLocationList)
             Divider()
                 .padding(.horizontal)
                 .padding(.vertical, 5)
-            LocationScrollView(locationList: $sortedLocationList, onTap: { location in
+            LocationScrollView(locationList: $locationList, onTap: { location in
                 if let selectedLocation = locationList.first(where: { $0.id == location.id }) { // Fetch the Location
                     
                     self.selectedLocation = selectedLocation // Pass the Location

@@ -14,7 +14,7 @@ struct Fillers {
 enum ListType {
     case animals
     case locations
-    case supplies
+    case supplyItems
     case hyperlinks
     
     var parameters: ButtonParameters {
@@ -39,11 +39,11 @@ enum ListType {
                 requiresSubscription: false,
                 activeSubscription: true
                 )
-        case .supplies:
+        case .supplyItems:
             return ButtonParameters (
                 title: "N/A",
                 buttonType: .cell,
-                layout: .textLeftAlligned,
+                layout: .textRightAlligned,
                 height: .tall,
                 isSelected: false,
                 requiresSubscription: false,
@@ -90,6 +90,20 @@ struct ListItem {
         self.data = location.address ?? "No address provided"
     }
     
+    // Initializer for SupplyItem
+    init(from supplyItem: SupplyItem) {
+        self.name = supplyItem.name
+        self.icon = "tag" // Default icon for supply items, can be customized per type
+        
+        if let semen = supplyItem as? Semen {
+            self.data = "Sire: \(semen.sire), Count: \(semen.count)"
+        } else if let embryo = supplyItem as? Embryo {
+            self.data = "Sire: \(embryo.sire), Dam: \(embryo.dam), Count: \(embryo.count)"
+        } else {
+            self.data = "Count: \(supplyItem.count)"
+        }
+    }
+    
     init(name: String, icon: String?, data: String?) {
         self.name = name
         self.icon = icon
@@ -105,9 +119,9 @@ struct DestinationView: View {
     }
 }
 
+// MARK: - Previews
 #Preview {
-    @Previewable @State var previewAnimal: Animal = AnimalClass().testAnimalList[2]
-    AnimalDetailView(animal: previewAnimal)
+    SupplyItemListView(navigationTitle: "Supply Items", listType: .supplyItems)
 }
 
 //MARK: - Initial Testing Data
