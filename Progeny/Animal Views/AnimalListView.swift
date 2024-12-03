@@ -71,7 +71,7 @@ struct AnimalListViewiPad: View {
                     self.selectedAnimal = selectedAnimal // Pass the Animal
                     
                     if isPortrait {
-                        columnVisibility = .detailOnly  // Adjust the Column
+                        columnVisibility = .detailOnly
                     }
                 }
             })
@@ -100,7 +100,9 @@ struct AnimalListViewiPad: View {
                 animalList.append(newAnimal)
                 showAnimalTypeSelection = false
                 selectedAnimal = newAnimal
-                columnVisibility = .detailOnly
+                if isPortrait {
+                    columnVisibility = .detailOnly
+                }
             }
         }
     }

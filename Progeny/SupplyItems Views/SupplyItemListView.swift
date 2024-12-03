@@ -57,6 +57,9 @@ struct SupplyItemListViewiPad: View {
     @Binding var navigationTitle: String
     @State private var columnVisibility = NavigationSplitViewVisibility.all
     
+    // Add Animal View
+    @State private var showSupplyItemSelection = false
+    
     var isPortrait: Bool {
         UIDevice.current.orientation.isPortrait
     }
@@ -77,10 +80,7 @@ struct SupplyItemListViewiPad: View {
             })
             .padding()
             AddPropertyButton(title: "Add Supply Item", icon: "plus") {
-                let newSupplyItem = Semen(name: "New Semen", sire: "Unknown", count: 0, isAvailable: true)
-                supplyItemList.append(newSupplyItem)
-                selectedSupplyItem = newSupplyItem
-                columnVisibility = .detailOnly
+                showSupplyItemSelection = true
             }
         } detail: {
             NavigationStack {
@@ -93,6 +93,26 @@ struct SupplyItemListViewiPad: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             columnVisibility = .all
+        }
+        .sheet(isPresented: $showSupplyItemSelection) {
+            SupplyItemSelectionView(isPresented: $showSupplyItemSelection) { selectedType in
+                // Create a new supply item based on the selected type
+                let newSupplyItem: SupplyItem
+                switch selectedType {
+                case "Semen":
+                    newSupplyItem = Semen(name: "New Semen", sire: "Unknown", count: 0, isAvailable: true)
+                case "Embryo":
+                    newSupplyItem = Embryo(name: "New Embryo", sire: "Unknown", dam: "Unknown", count: 0, isAvailable: true)
+                default:
+                    fatalError("Unhandled supply item type: \(selectedType)")
+                }
+                supplyItemList.append(newSupplyItem)
+                showSupplyItemSelection = false
+                selectedSupplyItem = newSupplyItem
+                if isPortrait {
+                    columnVisibility = .detailOnly
+                }
+            }
         }
     }
 }
@@ -107,6 +127,9 @@ struct SupplyItemListViewiPhone: View {
     @Binding var selectedSupplyItem: SupplyItem
     @State private var showEditor = false
     @State private var isUserInitiatedSelection = false
+    
+    // Add Animal View
+    @State private var showSupplyItemSelection = false
     
     var body: some View {
         NavigationStack {
@@ -137,10 +160,24 @@ struct SupplyItemListViewiPhone: View {
                 SupplyItemDetailView(supplyItem: selectedSupplyItem)
             }
             AddPropertyButton(title: "Add Supply Item", icon: "plus") {
-                let newSupplyItem = Semen(name: "New Semen", sire: "Unknown", count: 0, isAvailable: true)
-                supplyItemList.append(newSupplyItem)
-                selectedSupplyItem = newSupplyItem
-                isUserInitiatedSelection = true
+                showSupplyItemSelection = true
+            }
+            .sheet(isPresented: $showSupplyItemSelection) {
+                SupplyItemSelectionView(isPresented: $showSupplyItemSelection) { selectedType in
+                    // Use selectedType to create a new supply item
+                    let newSupplyItem: SupplyItem
+                    switch selectedType {
+                    case "Semen":
+                        newSupplyItem = Semen(name: "New Semen", sire: "Unknown", count: 0, isAvailable: true)
+                    case "Embryo":
+                        newSupplyItem = Embryo(name: "New Embryo", sire: "Unknown", dam: "Unknown", count: 0, isAvailable: true)
+                    default:
+                        fatalError("Unhandled supply item type: \(selectedType)")
+                    }
+                    supplyItemList.append(newSupplyItem)
+                    selectedSupplyItem = newSupplyItem
+                    isUserInitiatedSelection = true
+                }
             }
         }
     }

@@ -1,22 +1,22 @@
 //
-//  AnimalTypeSelectionView.swift
+//  SupplyItemSelectionView.swift
 //  Progeny
 //
-//  Created by Daniel Beilfuss on 11/21/24.
+//  Created by Daniel Beilfuss on 12/2/24.
 //
 
 import SwiftUI
 
-struct AnimalTypeSelectionView: View {
-
+struct SupplyItemSelectionView: View {
+    
     @Binding var isPresented: Bool
     var onSelect: (String) -> Void
     
-    var t = Constants().terms
     var c = globalStyleSheet.colors
-    private var p: ButtonParameters { ListType.animals.parameters }
-
-    private var options: [String] { ["Adult", "\(t.animalBabyName)"] }
+    private var p: ButtonParameters { ListType.supplyItems.parameters }
+    
+    // Hardcoded options for Supply Items
+    private var options: [String] { ["Semen", "Embryo"] }
     
     var body: some View {
         VStack(spacing: 20) {
@@ -36,7 +36,7 @@ struct AnimalTypeSelectionView: View {
                 
                 Spacer()
                 
-                Text("Add \(t.animalNameSingular)")
+                Text("Add Supply Item")
                     .font(.headline)
                     .frame(width: UIScreen.main.bounds.width / 3)
                 
@@ -46,12 +46,12 @@ struct AnimalTypeSelectionView: View {
                 .frame(width: UIScreen.main.bounds.width / 3)
                 
             }
-
+            
             Spacer()
             
-            // Animal Options
+            // Supply Item Options
             ForEach(options, id: \.self) { option in
-                Button() {
+                Button {
                     onSelect(option)
                 } label: {
                     PrimaryTextOverlay(p: ButtonParameters(
@@ -82,16 +82,15 @@ struct AnimalTypeSelectionView: View {
         .padding()
     }
 }
-
-#Preview {
-    @Previewable @State var selectedItem: ListItem?
-    @Previewable @State var isPresented: Bool = true
     
-    AnimalTypeSelectionView(isPresented: $isPresented) { selectedType in
-        testFunction(selectedItem: selectedType)
+    #Preview {
+        @Previewable @State var isPresented: Bool = true
+        
+        SupplyItemSelectionView(isPresented: $isPresented) { selectedOption in
+            testFunction(selectedItem: selectedOption)
+        }
     }
-}
-
-func testFunction(selectedItem: String) {
-    print(selectedItem)
-}
+    
+    func testFunction(selectedItem: SupplyItem) {
+        print("Selected Item: \(selectedItem.name)")
+    }
